@@ -8,6 +8,8 @@ class Question extends Post {
     String _url
     static hasMany = [answers:Answer, tags:Tag]
 
+    static belongsTo = [user:User]
+
     static constraints = {
     }
 }
