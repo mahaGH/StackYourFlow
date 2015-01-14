@@ -1,6 +1,7 @@
 package fr.isima.stackyourflow
 
 
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
@@ -11,7 +12,7 @@ class PostController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
-        respond Post.list(params), model: [postInstanceCount: Post.count()]
+        respond Post.list(params), model:[postInstanceCount: Post.count()]
     }
 
     def show(Post postInstance) {
@@ -30,11 +31,11 @@ class PostController {
         }
 
         if (postInstance.hasErrors()) {
-            respond postInstance.errors, view: 'create'
+            respond postInstance.errors, view:'create'
             return
         }
 
-        postInstance.save flush: true
+        postInstance.save flush:true
 
         request.withFormat {
             form multipartForm {
@@ -57,18 +58,18 @@ class PostController {
         }
 
         if (postInstance.hasErrors()) {
-            respond postInstance.errors, view: 'edit'
+            respond postInstance.errors, view:'edit'
             return
         }
 
-        postInstance.save flush: true
+        postInstance.save flush:true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Post.label', default: 'Post'), postInstance.id])
                 redirect postInstance
             }
-            '*' { respond postInstance, [status: OK] }
+            '*'{ respond postInstance, [status: OK] }
         }
     }
 
@@ -80,14 +81,14 @@ class PostController {
             return
         }
 
-        postInstance.delete flush: true
+        postInstance.delete flush:true
 
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Post.label', default: 'Post'), postInstance.id])
-                redirect action: "index", method: "GET"
+                redirect action:"index", method:"GET"
             }
-            '*' { render status: NO_CONTENT }
+            '*'{ render status: NO_CONTENT }
         }
     }
 
@@ -97,7 +98,7 @@ class PostController {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'post.label', default: 'Post'), params.id])
                 redirect action: "index", method: "GET"
             }
-            '*' { render status: NOT_FOUND }
+            '*'{ render status: NOT_FOUND }
         }
     }
 }
