@@ -16,7 +16,6 @@ class Post {
     def share(){}
     def edit(){}
 
-
     static constraints = {
     }
 }
