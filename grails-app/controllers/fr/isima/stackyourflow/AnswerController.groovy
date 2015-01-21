@@ -34,7 +34,10 @@ class AnswerController {
             return
         }
 
+        answerInstance.question.answers.add(answerInstance);
+        answerInstance.question.save();
         answerInstance.save flush: true
+
 
         request.withFormat {
             form multipartForm {

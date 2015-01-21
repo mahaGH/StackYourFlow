@@ -6,6 +6,7 @@ package fr.isima.stackyourflow
 class Post {
     String _text
     int _score
+    static belongsTo = [user:User]
 
     def create(){}
 
@@ -17,5 +18,7 @@ class Post {
     def edit(){}
 
     static constraints = {
+        _score nullable : true
+        user nullable : true
     }
 }

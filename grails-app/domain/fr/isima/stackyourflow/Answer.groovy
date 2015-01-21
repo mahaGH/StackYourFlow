@@ -3,10 +3,16 @@ package fr.isima.stackyourflow
 /**
  * Created by ghayouba on 14/01/2015.
  */
-class Answer {
-    static hasMany = [questions:Question]
-    static belongsTo = Question
+class Answer extends Post{
+
+    public Answer() {
+        _score = 0;
+    }
+    static hasMany = [comments:Comment]
+    static belongsTo = [question:Question]
 
     static constraints = {
+        comments nullable: true
+        question nullable: true
     }
 }
