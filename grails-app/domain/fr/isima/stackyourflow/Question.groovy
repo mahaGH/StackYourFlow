@@ -16,6 +16,6 @@ class Question extends Post {
 
 
     static constraints = {
-
+        _url nullable : true
     }
 }

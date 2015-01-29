@@ -24,6 +24,26 @@ class QuestionController {
         respond questionInstance, [answerInstance: ans];
     }
 
+
+    def editMode = {
+        render(template:'formCreate')
+        render text:'<g:remoteLink action="cancelEdit" update="answer">cancel</g:remoteLink>',contentType: "text/html",encoding: "UTF-8"
+        render {
+            div(id: "answer", template:'formCreate' , text:"<g:remoteLink action=\\\"saveEdit\\\" update=\\\"answer\\\">save</g:remoteLink>",contentType: "text/html",encoding: "UTF-8")
+        }
+
+      // render text: "<g:remoteLink action=\"saveEdit\" update=\"answer\">save</g:remoteLink>",contentType: "text/html",encoding: "UTF-8"
+
+    }
+
+    def cancelEdit = {
+
+    }
+
+    def saveEdit = {
+
+    }
+
     @Transactional
     def saveAnswer(Answer answerInstance)
     {
@@ -71,7 +91,6 @@ class QuestionController {
         if (answerController == null)
             answerController = new AnswerController()
         Answer ans =  answerController.create()
-       // Answer ans = new Answer();
 
         ans.question = questionInstance;
         respond ans;
