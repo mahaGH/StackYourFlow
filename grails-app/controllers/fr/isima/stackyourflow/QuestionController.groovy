@@ -9,8 +9,10 @@ class QuestionController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
+    //la question qui est affichée
     Question question;
-    Answer AnswerInstance;
+
+
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -20,19 +22,21 @@ class QuestionController {
     def show(Question questionInstance) {
         Answer ans = new Answer();
         question = questionInstance;
-        ans.question = questionInstance;
+       // ans.question = questionInstance;
         respond questionInstance, [answerInstance: ans];
     }
 
 
-    def editMode = {
-        render(template:'formCreate')
-        render text:'<g:remoteLink action="cancelEdit" update="answer">cancel</g:remoteLink>',contentType: "text/html",encoding: "UTF-8"
-        render {
-            div(id: "answer", template:'formCreate' , text:"<g:remoteLink action=\\\"saveEdit\\\" update=\\\"answer\\\">save</g:remoteLink>",contentType: "text/html",encoding: "UTF-8")
-        }
+    def editMode(Answer answerInstance) {
+        
+        render(template:'templateAnswerEditView', model: [answer: answerInstance])
 
-      // render text: "<g:remoteLink action=\"saveEdit\" update=\"answer\">save</g:remoteLink>",contentType: "text/html",encoding: "UTF-8"
+        //render text:'<g:remoteLink action="cancelEdit" update="answer">cancel</g:remoteLink>',contentType: "text/html",encoding: "UTF-8"
+        //render {
+        //    div(id: "answer", template:'formCreate' , text:"<g:remoteLink action=\\\"saveEdit\\\" update=\\\"answer\\\">save</g:remoteLink>",contentType: "text/html",encoding: "UTF-8")
+       // }
+
+       // render text: "<g:remoteLink action=\"saveEdit\" update=\"answer\">save</g:remoteLink>",contentType: "text/html",encoding: "UTF-8"
 
     }
 
@@ -64,7 +68,7 @@ class QuestionController {
 
             answerInstance.question.answers.add(answerInstance);
 
-            answerInstance.save();
+            //answerInstance.save();
             answerInstance.save flush: true
 
 
@@ -86,15 +90,6 @@ class QuestionController {
         respond new Answer ( params );
     }
 
-    def addAnswer(Question questionInstance) {
-
-        if (answerController == null)
-            answerController = new AnswerController()
-        Answer ans =  answerController.create()
-
-        ans.question = questionInstance;
-        respond ans;
-    }
 
     @Transactional
     def save(Question questionInstance) {
@@ -124,6 +119,30 @@ class QuestionController {
 
     def edit(Question questionInstance) {
         respond questionInstance
+    }
+
+    @Transactional
+    def updateAnswer(Answer answerInstance) {
+            if (answerInstance == null) {
+                notFound()
+                return
+            }
+
+            if (answerInstance.hasErrors()) {
+                respond answerInstance.errors, view: 'edit'
+                return
+            }
+
+            answerInstance.question = question;
+            answerInstance.save flush: true
+
+            request.withFormat {
+                form multipartForm {
+                    flash.message = message(code: 'default.updated.message', args: [message(code: 'Answer.label', default: 'Answer'), answerInstance.id])
+                    redirect answerInstance
+                }
+                '*' { respond answerInstance, [status: OK] }
+            }
     }
 
     @Transactional
