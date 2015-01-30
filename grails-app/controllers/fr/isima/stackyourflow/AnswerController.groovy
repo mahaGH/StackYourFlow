@@ -69,7 +69,7 @@ class AnswerController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Answer.label', default: 'Answer'), answerInstance.id])
-                redirect answerInstance
+                redirect answerInstance.question
             }
             '*' { respond answerInstance, [status: OK] }
         }
@@ -85,13 +85,13 @@ class AnswerController {
 
         answerInstance.delete flush: true
 
-       /* request.withFormat {
+        request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Answer.label', default: 'Answer'), answerInstance.id])
-               // redirect action: "index", method: "GET"
+               redirect answerInstance.question
             }
             '*' { render status: NO_CONTENT }
-        }*/
+        }
     }
 
     protected void notFound() {

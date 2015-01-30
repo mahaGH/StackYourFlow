@@ -22,30 +22,35 @@ class QuestionController {
     def show(Question questionInstance) {
         Answer ans = new Answer();
         question = questionInstance;
-       // ans.question = questionInstance;
         respond questionInstance, [answerInstance: ans];
     }
 
 
     def editMode(Answer answerInstance) {
-        
+
         render(template:'templateAnswerEditView', model: [answer: answerInstance])
 
-        //render text:'<g:remoteLink action="cancelEdit" update="answer">cancel</g:remoteLink>',contentType: "text/html",encoding: "UTF-8"
-        //render {
-        //    div(id: "answer", template:'formCreate' , text:"<g:remoteLink action=\\\"saveEdit\\\" update=\\\"answer\\\">save</g:remoteLink>",contentType: "text/html",encoding: "UTF-8")
-       // }
-
-       // render text: "<g:remoteLink action=\"saveEdit\" update=\"answer\">save</g:remoteLink>",contentType: "text/html",encoding: "UTF-8"
-
     }
 
-    def cancelEdit = {
 
-    }
+    @Transactional
+    def deleteAnswer(Answer answerInstance) {
 
-    def saveEdit = {
+        if (answerInstance == null) {
+            notFound()
+            return
+        }
 
+        Question q = answerInstance.question;
+        answerInstance.delete flush: true
+
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Answer.label', default: 'Answer'), answerInstance.id])
+                redirect q
+            }
+            '*' { render status: NO_CONTENT }
+        }
     }
 
     @Transactional
@@ -75,7 +80,7 @@ class QuestionController {
             request.withFormat {
                 form multipartForm {
                     flash.message = message(code: 'default.created.message', args: [message(code: 'answer.label', default: 'Answer'), answerInstance.id])
-                    redirect answerInstance
+                    redirect answerInstance.question
                 }
                 '*' { respond answerInstance, [status: CREATED] }
             }
@@ -85,10 +90,6 @@ class QuestionController {
         respond new Question(params)
     }
 
-    def createAnswer()
-    {
-        respond new Answer ( params );
-    }
 
 
     @Transactional
@@ -139,7 +140,7 @@ class QuestionController {
             request.withFormat {
                 form multipartForm {
                     flash.message = message(code: 'default.updated.message', args: [message(code: 'Answer.label', default: 'Answer'), answerInstance.id])
-                    redirect answerInstance
+                    redirect answerInstance.question
                 }
                 '*' { respond answerInstance, [status: OK] }
             }
