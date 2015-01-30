@@ -39,6 +39,15 @@
 			</li>
 		</g:if>
 
+		<g:if test="${questionInstance?._creationDate}">
+			<li class="fieldcontain">
+				<span id="_creationDate-label" class="property-label"><g:message code="comment._creationDate.label" default="Creation Date" /></span>
+
+				<span class="property-value" aria-labelledby="_creationDate-label"><g:formatDate date="${questionInstance?._creationDate}" /></span>
+			</li>
+
+		</g:if>
+
 
 
 		<g:if test="${questionInstance?._url}">

@@ -10,6 +10,16 @@
 			<span class="property-value" aria-labelledby="_score-label"><g:fieldValue bean="${answer}" field="_score"/></span>
 			<br>
 		</g:if>
+
+		<g:if test="${answer?._creationDate}">
+
+				<span id="_creationDate-label" class="property-label"><g:message code="comment._creationDate.label" default="Creation Date" /></span>
+
+				<span class="property-value" aria-labelledby="_creationDate-label"><g:formatDate date="${answer?._creationDate}" /></span>
+
+
+		</g:if>
+
 		<g:if test="${answer?.user}">
 			<span id="user-label" class="property-label"><g:message code="a.user.label" default="User" /></span>
 

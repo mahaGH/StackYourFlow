@@ -8,11 +8,11 @@ class Answer extends Post{
     public Answer() {
         _score = 0;
     }
-    static hasMany = [comments:Comment]
+
     static belongsTo = [question:Question]
 
     static constraints = {
-        comments nullable: true
+
         question nullable: true
     }
 }

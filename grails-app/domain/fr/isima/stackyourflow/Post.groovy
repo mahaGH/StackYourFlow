@@ -6,7 +6,7 @@ package fr.isima.stackyourflow
 class Post extends Message{
 
     int _score
-
+    static hasMany = [comments:Comment]
 
     def votePlus(){}
     def voteMinus(){}
@@ -14,7 +14,7 @@ class Post extends Message{
     def share(){}
 
     static constraints = {
-        
+        comments nullable: true
         user nullable : true
     }
 }
