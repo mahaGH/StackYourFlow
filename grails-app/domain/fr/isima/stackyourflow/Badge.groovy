@@ -1,4 +1,5 @@
 package fr.isima.stackyourflow
+import fr.isima.authentication.User
 
 /**
  * Created by ghayouba on 14/01/2015.

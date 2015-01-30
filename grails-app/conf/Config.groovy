@@ -94,6 +94,8 @@ environments {
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }
+//spring security encryption algorithm
+grails.plugin.springsecurity.password.algorithm='bcrypt'
 
 // log4j configuration
 log4j.main = {
@@ -115,3 +117,20 @@ log4j.main = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+
+// Added by the Spring Security Core plugin:
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'fr.isima.authentication.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'fr.isima.authentication.UserRole'
+grails.plugin.springsecurity.authority.className = 'fr.isima.authentication.Role'
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+	'/':                              ['permitAll'],
+	'/index':                         ['permitAll'],
+	'/index.gsp':                     ['permitAll'],
+	'/assets/**':                     ['permitAll'],
+	'/**/js/**':                      ['permitAll'],
+	'/**/css/**':                     ['permitAll'],
+	'/**/images/**':                  ['permitAll'],
+	'/**/favicon.ico':                ['permitAll']
+]
+
