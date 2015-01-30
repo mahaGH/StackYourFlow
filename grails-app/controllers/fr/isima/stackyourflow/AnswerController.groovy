@@ -35,6 +35,7 @@ class AnswerController {
         }
 
         answerInstance.question.answers.add(answerInstance);
+        answerInstance._creationDate = new Date();
         answerInstance.question.save();
         answerInstance.save flush: true
 

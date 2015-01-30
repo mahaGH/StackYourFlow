@@ -69,6 +69,7 @@ class QuestionController {
 
            // answerInstance.question = questionInstance;
             answerInstance.question = question;
+            answerInstance._creationDate = new Date();
             if (answerInstance.question.answers == null ) answerInstance.question.answers = new ArrayList<Answer>();
 
             answerInstance.question.answers.add(answerInstance);
@@ -106,7 +107,7 @@ class QuestionController {
 
         questionInstance._score = 0
         questionInstance.answers = new ArrayList<Answer>()
-
+        questionInstance._creationDate = new Date();
         questionInstance.save flush: true
 
         request.withFormat {
