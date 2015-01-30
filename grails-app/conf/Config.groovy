@@ -85,6 +85,9 @@ grails.hibernate.pass.readonly = false
 // configure passing read-only to OSIV session by default, requires "singleSession = false" OSIV mode
 grails.hibernate.osiv.readonly = false
 
+//configuration for encryption algorithm
+grails.plugin.springsecurity.password.algorithm='bcrypt'
+
 environments {
     development {
         grails.logging.jul.usebridge = true
@@ -94,8 +97,6 @@ environments {
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }
-//spring security encryption algorithm
-grails.plugin.springsecurity.password.algorithm='bcrypt'
 
 // log4j configuration
 log4j.main = {
