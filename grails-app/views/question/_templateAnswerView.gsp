@@ -30,6 +30,8 @@
 		<g:if test="${answer?.comments}">
 
 			<span id="comments-label" class="property-label"><g:message code="a.comments.label" default="Comments" /></span>
+			<g:render template="/question/templateCommentView" collection="${answer.comments}" var="comment"></g:render>
+
 
 			<g:each in="${answer.comments}" var="c">
 				<span class="property-value" aria-labelledby="comments-label"><g:link controller="comment" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
@@ -57,9 +59,17 @@
 			</fieldset>
 		</g:form>
 
+
+
 		<g:javascript library="prototype" />
 
 
+
+	</div>
+
+	<div class="panel-footer" id="commentaire_ans${answer.id}">
+
+		<g:remoteLink action="leaveAComment" id="${answer.id}" update="commentaire_ans${answer.id}">Leave a comment</g:remoteLink>
 
 	</div>
 </div>
