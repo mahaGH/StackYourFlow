@@ -26,6 +26,8 @@
 					
 						<th><g:message code="comment.user.label" default="User" /></th>
 					
+						<th><g:message code="comment.refTo.label" default="Ref To" /></th>
+					
 						<g:sortableColumn property="_creationDate" title="${message(code: 'comment._creationDate.label', default: 'Creation Date')}" />
 					
 						<g:sortableColumn property="_text" title="${message(code: 'comment._text.label', default: 'Text')}" />
@@ -37,6 +39,8 @@
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 					
 						<td><g:link action="show" id="${commentInstance.id}">${fieldValue(bean: commentInstance, field: "user")}</g:link></td>
+					
+						<td>${fieldValue(bean: commentInstance, field: "refTo")}</td>
 					
 						<td><g:formatDate date="${commentInstance._creationDate}" /></td>
 					

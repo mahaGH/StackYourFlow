@@ -32,6 +32,15 @@
 				</li>
 				</g:if>
 			
+				<g:if test="${commentInstance?.refTo}">
+				<li class="fieldcontain">
+					<span id="refTo-label" class="property-label"><g:message code="comment.refTo.label" default="Ref To" /></span>
+					
+						<span class="property-value" aria-labelledby="refTo-label"><g:link controller="post" action="show" id="${commentInstance?.refTo?.id}">${commentInstance?.refTo?.encodeAsHTML()}</g:link></span>
+					
+				</li>
+				</g:if>
+			
 				<g:if test="${commentInstance?._creationDate}">
 				<li class="fieldcontain">
 					<span id="_creationDate-label" class="property-label"><g:message code="comment._creationDate.label" default="Creation Date" /></span>
