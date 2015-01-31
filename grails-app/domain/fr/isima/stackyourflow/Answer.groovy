@@ -11,6 +11,12 @@ class Answer extends Post{
 
     static belongsTo = [question:Question]
 
+    @Override
+    public Question Redirect ()
+    {
+        return  (Question) question;
+    }
+
     static constraints = {
 
         question nullable: true

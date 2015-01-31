@@ -13,6 +13,11 @@ class Question extends Post {
     String _url
     static hasMany = [answers:Answer, tags:Tag]
 
+    @Override
+    public Question Redirect() {
+        return (Question) this;
+    }
+
 
 
     static constraints = {

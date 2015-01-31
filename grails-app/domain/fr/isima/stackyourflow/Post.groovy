@@ -8,6 +8,9 @@ class Post extends Message{
     int _score
     static hasMany = [comments:Comment]
 
+    public Question Redirect() {
+        return new Question();
+    }
     def votePlus(){}
     def voteMinus(){}
 

@@ -13,6 +13,8 @@ class QuestionController {
     //la question qui est affichée
     Question question;
 
+    List<Post> posts = new ArrayList<>();
+
 
 
     def index(Integer max) {
@@ -32,6 +34,59 @@ class QuestionController {
         render(template:'templateAnswerEditView', model: [answer: answerInstance])
 
     }
+
+    @Transactional
+    def saveComment(Comment commentInstance) {
+        if (commentInstance == null) {
+            notFound()
+            return
+        }
+
+        if (commentInstance.hasErrors()) {
+            respond commentInstance.errors, view: 'create'
+            return
+        }
+
+        if (posts.size() -1 >= 0)
+        {
+            commentInstance.refTo = posts.get(posts.size() - 1)
+            posts.remove(posts.size()-1);
+
+            if (commentInstance.refTo.comments == null)
+                commentInstance.refTo.comments = new ArrayList<>();
+
+            commentInstance.refTo.refresh()
+            commentInstance.refTo.comments.add(commentInstance)
+        }
+
+
+        commentInstance.save flush: true
+
+
+
+
+            request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.created.message', args: [message(code: 'comment.label', default: 'Comment'), commentInstance.id])
+                redirect commentInstance.refTo.Redirect()
+            }
+            '*' { respond commentInstance, [status: CREATED] }
+             }
+
+
+    }
+
+    def leaveAComment(Post postInstance) {
+        //params = ${postInstance.id}
+        //comment.refTo = postInstance;
+        Comment comment = new Comment();
+        posts.add(postInstance);
+
+       // respond commentInstance:comment
+        render template: "templateCommentCreate",model: [commentInstance:comment]
+    }
+
+
 
 
     @Transactional
