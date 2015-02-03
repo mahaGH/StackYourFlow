@@ -17,14 +17,7 @@
 			<g:hiddenField name="version" value="${answer?.version}" />
 			<fieldset class="form">
 
-				<div class="fieldcontain ${hasErrors(bean: answer, field: '_text', 'error')} required">
-					<label for="_text">
-						<g:message code="answer._text.label" default="Text" />
-						<span class="required-indicator">*</span>
-					</label>
-					<g:textField name="_text" required="" value="${answer?._text}"/>
-
-				</div>
+				<g:render template="/answer/form" model="[answerInstance:answer]"/>
 
 			</fieldset>
 			<fieldset class="buttons">

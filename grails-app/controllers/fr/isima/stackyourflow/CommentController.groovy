@@ -24,6 +24,8 @@ class CommentController {
         respond new Comment(params)
     }
 
+    def springSecurityService
+
     @Transactional
     def save(Comment commentInstance) {
         if (commentInstance == null) {
@@ -36,6 +38,7 @@ class CommentController {
             return
         }
 
+        commentInstance.user = springSecurityService.currentUser
         commentInstance.save flush: true
 
         request.withFormat {
@@ -68,7 +71,7 @@ class CommentController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Comment.label', default: 'Comment'), commentInstance.id])
-                redirect commentInstance
+                redirect commentInstance.refTo.Redirect()
             }
             '*' { respond commentInstance, [status: OK] }
         }
@@ -87,7 +90,7 @@ class CommentController {
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'Comment.label', default: 'Comment'), commentInstance.id])
-                redirect action: "index", method: "GET"
+                redirect commentInstance.refTo.Redirect()
             }
             '*' { render status: NO_CONTENT }
         }

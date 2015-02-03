@@ -11,8 +11,7 @@ class Post extends Message{
     public Question Redirect() {
         return new Question();
     }
-    def votePlus(){}
-    def voteMinus(){}
+
 
     def share(){}
 

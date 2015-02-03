@@ -23,16 +23,12 @@
 			</g:if>
 			<ol class="property-list question">
 
-				<g:render template="templateQuestionView" model="[questionInstance:questionInstance]"/>
+			<span class="property-value" aria-labelledby="user-label"><g:link controller="user" action="show" id="${currentUser?.id}">${currentUser?.username}</g:link></span>
+				<g:render template="templateQuestionView" model="[questionInstance:questionInstance]"  />
 			
 			</ol>
 
-			<g:form url="[resource:questionInstance, action:'delete']" method="DELETE">
-				<fieldset class="buttons">
-					<g:link class="edit" action="edit" resource="${questionInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-				</fieldset>
-			</g:form>
+
 		</div>
 
 	<div id="create-answer" class="content scaffold-create" role="main">
@@ -47,9 +43,9 @@
 				</g:eachError>
 			</ul>
 		</g:hasErrors>
-		<g:form url="[resource:answerInstance, action:'saveAnswer']" >
+		<g:form url="[resource:answerInstance, action:'saveAnswer', controller:'question']" >
 			<fieldset class="formCreate">
-				<g:render template="formCreate"/>
+				<g:render template="/answer/form"/>
 			</fieldset>
 			<fieldset class="buttons">
 				<g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" />
