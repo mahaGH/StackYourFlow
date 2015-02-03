@@ -78,13 +78,13 @@ function ast_walker() {
                 a[1] = walk(def[1]);
             return a;
         }) ];
-    };
+    }
     function _block(statements) {
         var out = [ this[0] ];
         if (statements != null)
             out.push(MAP(statements, walk));
         return out;
-    };
+    }
     var walkers = {
         "string": function(str) {
             return [ this[0], str ];
@@ -231,8 +231,7 @@ function ast_walker() {
         } finally {
             stack.pop();
         }
-    };
-
+    }
     function dive(ast) {
         if (ast == null)
             return null;
@@ -242,8 +241,7 @@ function ast_walker() {
         } finally {
             stack.pop();
         }
-    };
-
+    }
     function with_walkers(walkers, cont){
         var save = {}, i;
         for (i in walkers) if (HOP(walkers, i)) {
@@ -256,8 +254,7 @@ function ast_walker() {
             else user[i] = save[i];
         }
         return ret;
-    };
-
+    }
     return {
         walk: walk,
         dive: dive,
@@ -269,9 +266,8 @@ function ast_walker() {
             return stack;
         }
     };
-};
-
-/* -----[ Scope and mangling ]----- */
+}
+    /* -----[ Scope and mangling ]----- */
 
 function Scope(parent) {
     this.names = {};        // names defined in this scope
@@ -290,9 +286,8 @@ function Scope(parent) {
     } else {
         this.level = 0;
     }
-};
-
-function base54_digits() {
+}
+    function base54_digits() {
     if (typeof DIGITS_OVERRIDE_FOR_TESTING != "undefined")
         return DIGITS_OVERRIDE_FOR_TESTING;
     else
@@ -410,16 +405,13 @@ function ast_add_scope(ast) {
         ret.scope = current_scope;
         current_scope = current_scope.parent;
         return ret;
-    };
-
+    }
     function define(name, type) {
         return current_scope.define(name, type);
-    };
-
+    }
     function reference(name) {
         current_scope.refs[name] = true;
-    };
-
+    }
     function _lambda(name, args, body) {
         var is_defun = this[0] == "defun";
         return [ this[0], is_defun ? define(name, "defun") : name, args, with_new_scope(function(){
@@ -427,8 +419,7 @@ function ast_add_scope(ast) {
             MAP(args, function(name){ define(name, "arg") });
             return MAP(body, walk);
         })];
-    };
-
+    }
     function _vardefs(type) {
         return function(defs) {
             MAP(defs, function(d){
@@ -436,13 +427,11 @@ function ast_add_scope(ast) {
                 if (d[1]) reference(d[0]);
             });
         };
-    };
-
+    }
     function _breacont(label) {
         if (label)
             current_scope.labels.refs[label] = true;
-    };
-
+    }
     return with_new_scope(function(){
         // process AST
         var ret = w.with_walkers({
@@ -501,15 +490,14 @@ function ast_add_scope(ast) {
                     if (s === origin) break;
                 }
             }
-        };
+        }
         fixrefs(current_scope);
 
         return ret;
     });
 
-};
-
-/* -----[ mangle names ]----- */
+}
+    /* -----[ mangle names ]----- */
 
 function ast_mangle(ast, options) {
     var w = ast_walker(), walk = w.walk, scope;
@@ -530,8 +518,7 @@ function ast_mangle(ast, options) {
             (scope.names[name] == 'defun' || scope.names[name] == 'lambda'))
             return name;
         return scope.get_mangled(name, newMangle);
-    };
-
+    }
     function get_define(name) {
         if (options.defines) {
             // we always lookup a defined symbol for the current scope FIRST, so declared
@@ -543,8 +530,7 @@ function ast_mangle(ast, options) {
             }
             return null;
         }
-    };
-
+    }
     function _lambda(name, args, body) {
         if (!options.no_functions && options.mangle) {
             var is_defun = this[0] == "defun", extra;
@@ -565,8 +551,7 @@ function ast_mangle(ast, options) {
             return MAP(body, walk);
         }, extra);
         return [ this[0], name, args, body ];
-    };
-
+    }
     function with_scope(s, cont, extra) {
         var _scope = scope;
         scope = s;
@@ -580,18 +565,15 @@ function ast_mangle(ast, options) {
         ret.scope = s;
         scope = _scope;
         return ret;
-    };
-
+    }
     function _vardefs(defs) {
         return [ this[0], MAP(defs, function(d){
             return [ get_mangled(d[0]), walk(d[1]) ];
         }) ];
-    };
-
+    }
     function _breacont(label) {
         if (label) return [ this[0], scope.labels.get_mangled(label) ];
-    };
-
+    }
     return w.with_walkers({
         "function": _lambda,
         "defun": function() {
@@ -639,9 +621,8 @@ function ast_mangle(ast, options) {
     }, function() {
         return walk(ast_add_scope(ast));
     });
-};
-
-/* -----[
+}
+    /* -----[
    - compress foo["bar"] into foo.bar,
    - remove block brackets {} where possible
    - join consecutive var declarations
@@ -656,9 +637,8 @@ var warn = function(){};
 
 function best_of(ast1, ast2) {
     return gen_code(ast1).length > gen_code(ast2[0] == "stat" ? ast2[1] : ast2).length ? ast2 : ast1;
-};
-
-function last_stat(b) {
+}
+    function last_stat(b) {
     if (b[0] == "block" && b[1] && b[1].length > 0)
         return b[1][b[1].length - 1];
     return b;
@@ -672,9 +652,8 @@ function aborts(t) {
       case "throw":
         return true;
     }
-};
-
-function boolean_expr(expr) {
+}
+    function boolean_expr(expr) {
     return ( (expr[0] == "unary-prefix"
               && member(expr[1], [ "!", "delete" ])) ||
 
@@ -697,20 +676,17 @@ function boolean_expr(expr) {
              (expr[0] == "seq"
               && boolean_expr(expr[expr.length - 1]))
            );
-};
-
-function empty(b) {
+}
+    function empty(b) {
     return !b || (b[0] == "block" && (!b[1] || b[1].length == 0));
-};
-
-function is_string(node) {
+}
+    function is_string(node) {
     return (node[0] == "string" ||
             node[0] == "unary-prefix" && node[1] == "typeof" ||
             node[0] == "binary" && node[1] == "+" &&
             (is_string(node[2]) || is_string(node[3])));
-};
-
-var when_constant = (function(){
+}
+    var when_constant = (function(){
 
     var $NOT_CONSTANT = {};
 
@@ -767,8 +743,7 @@ var when_constant = (function(){
             }
         }
         throw $NOT_CONSTANT;
-    };
-
+    }
     return function(expr, yes, no) {
         try {
             var val = evaluate(expr), ast;
@@ -812,9 +787,8 @@ var when_constant = (function(){
 function warn_unreachable(ast) {
     if (!empty(ast))
         warn("Dropping unreachable code: " + gen_code(ast, true));
-};
-
-function prepare_ifs(ast) {
+}
+    function prepare_ifs(ast) {
     var w = ast_walker(), walk = w.walk;
     // In this first pass, we rewrite ifs which abort with no else with an
     // if-else.  For example:
@@ -859,17 +833,14 @@ function prepare_ifs(ast) {
         }
 
         return statements;
-    };
-
+    }
     function redo_if_lambda(name, args, body) {
         body = redo_if(body);
         return [ this[0], name, args, body ];
-    };
-
+    }
     function redo_if_block(statements) {
         return [ this[0], statements != null ? redo_if(statements) : null ];
-    };
-
+    }
     return w.with_walkers({
         "defun": redo_if_lambda,
         "function": redo_if_lambda,
@@ -889,22 +860,27 @@ function prepare_ifs(ast) {
     }, function() {
         return walk(ast);
     });
-};
-
-function for_side_effects(ast, handler) {
+}
+    function for_side_effects(ast, handler) {
     var w = ast_walker(), walk = w.walk;
     var $stop = {}, $restart = {};
-    function stop() { throw $stop };
-    function restart() { throw $restart };
-    function found(){ return handler.call(this, this, w, stop, restart) };
+    function stop() {
+        throw $stop
+    }
+    function restart() {
+        throw $restart
+    }
+    function found() {
+        return handler.call(this, this, w, stop, restart)
+    }
     function unary(op) {
         if (op == "++" || op == "--")
             return found.apply(this, arguments);
-    };
+    }
     function binary(op) {
         if (op == "&&" || op == "||")
             return found.apply(this, arguments);
-    };
+    }
     return w.with_walkers({
         "try": found,
         "throw": found,
@@ -936,9 +912,8 @@ function for_side_effects(ast, handler) {
             throw ex;
         }
     });
-};
-
-function ast_lift_variables(ast) {
+}
+    function ast_lift_variables(ast) {
     var w = ast_walker(), walk = w.walk, scope;
     function do_body(body, env) {
         var _scope = scope;
@@ -990,7 +965,7 @@ function ast_lift_variables(ast) {
         }
         scope = _scope;
         return body;
-    };
+    }
     function _vardefs(defs) {
         var ret = null;
         for (var i = defs.length; --i >= 0;) {
@@ -1006,10 +981,10 @@ function ast_lift_variables(ast) {
             return MAP.skip;
         }
         return [ "stat", ret ];
-    };
+    }
     function _toplevel(body) {
         return [ this[0], do_body(body, this.scope) ];
-    };
+    }
     return w.with_walkers({
         "function": function(name, args, body){
             for (var i = args.length; --i >= 0 && !body.scope.references(args[i]);)
@@ -1028,15 +1003,13 @@ function ast_lift_variables(ast) {
     }, function(){
         return walk(ast_add_scope(ast));
     });
-};
-
-function ast_squeeze(ast, options) {
+}
+    function ast_squeeze(ast, options) {
     ast = squeeze_1(ast, options);
     ast = squeeze_2(ast, options);
     return ast;
-};
-
-function squeeze_1(ast, options) {
+}
+    function squeeze_1(ast, options) {
     options = defaults(options, {
         make_seqs   : true,
         dead_code   : true,
@@ -1077,8 +1050,7 @@ function squeeze_1(ast, options) {
             break;
         }
         return not_c;
-    };
-
+    }
     function make_conditional(c, t, e) {
         var make_real_conditional = function() {
             if (c[0] == "unary-prefix" && c[1] == "!") {
@@ -1095,8 +1067,7 @@ function squeeze_1(ast, options) {
             warn_unreachable(val ? e : t);
             return          (val ? t : e);
         }, make_real_conditional);
-    };
-
+    }
     function rmblock(block) {
         if (block != null && block[0] == "block" && block[1]) {
             if (block[1].length == 1)
@@ -1105,12 +1076,10 @@ function squeeze_1(ast, options) {
                 block = [ "block" ];
         }
         return block;
-    };
-
+    }
     function _lambda(name, args, body) {
         return [ this[0], name, args, tighten(body, "lambda") ];
-    };
-
+    }
     // this function does a few things:
     // 1. discard useless blocks
     // 2. join consecutive var declarations
@@ -1215,8 +1184,7 @@ function squeeze_1(ast, options) {
         // })(0, []);
 
         return statements;
-    };
-
+    }
     function make_if(c, t, e) {
         return when_constant(c, function(ast, val){
             if (val) {
@@ -1231,8 +1199,7 @@ function squeeze_1(ast, options) {
         }, function() {
             return make_real_if(c, t, e);
         });
-    };
-
+    }
     function abort_else(c, t, e) {
         var ret = [ [ "if", negate(c), e ] ];
         if (t[0] == "block") {
@@ -1241,8 +1208,7 @@ function squeeze_1(ast, options) {
             ret.push(t);
         }
         return walk([ "block", ret ]);
-    };
-
+    }
     function make_real_if(c, t, e) {
         c = walk(c);
         t = walk(t);
@@ -1303,8 +1269,7 @@ function squeeze_1(ast, options) {
             ret = abort_else(c, t, e);
         }
         return ret;
-    };
-
+    }
     function _do_while(cond, body) {
         return when_constant(cond, function(cond, val){
             if (!val) {
@@ -1314,8 +1279,7 @@ function squeeze_1(ast, options) {
                 return [ "for", null, null, null, walk(body) ];
             }
         });
-    };
-
+    }
     return w.with_walkers({
         "sub": function(expr, subscript) {
             if (subscript[0] == "string") {
@@ -1419,9 +1383,8 @@ function squeeze_1(ast, options) {
     }, function() {
         return walk(prepare_ifs(walk(prepare_ifs(ast))));
     });
-};
-
-function squeeze_2(ast, options) {
+}
+    function squeeze_2(ast, options) {
     var w = ast_walker(), walk = w.walk, scope;
     function with_scope(s, cont) {
         var save = scope, ret;
@@ -1429,10 +1392,10 @@ function squeeze_2(ast, options) {
         ret = cont();
         scope = save;
         return ret;
-    };
+    }
     function lambda(name, args, body) {
         return [ this[0], name, args, with_scope(body.scope, curry(MAP, body, walk)) ];
-    };
+    }
     return w.with_walkers({
         "directive": function(dir) {
             if (scope.active_directive(dir))
@@ -1447,9 +1410,8 @@ function squeeze_2(ast, options) {
     }, function(){
         return walk(ast_add_scope(ast));
     });
-};
-
-/* -----[ re-generate code from the AST ]----- */
+}
+    /* -----[ re-generate code from the AST ]----- */
 
 var DOT_CALL_NO_PARENS = jsp.array_to_hash([
     "name",
@@ -1483,17 +1445,15 @@ function make_string(str, ascii_only) {
     if (ascii_only) str = to_ascii(str);
     if (dq > sq) return "'" + str.replace(/\x27/g, "\\'") + "'";
     else return '"' + str.replace(/\x22/g, '\\"') + '"';
-};
-
-function to_ascii(str) {
+}
+    function to_ascii(str) {
     return str.replace(/[\u0080-\uffff]/g, function(ch) {
         var code = ch.charCodeAt(0).toString(16);
         while (code.length < 4) code = "0" + code;
         return "\\u" + code;
     });
-};
-
-var SPLICE_NEEDS_BRACKETS = jsp.array_to_hash([ "if", "while", "do", "for", "for-in", "with" ]);
+}
+    var SPLICE_NEEDS_BRACKETS = jsp.array_to_hash([ "if", "while", "do", "for", "for-in", "with" ]);
 
 function gen_code(ast, options) {
     options = defaults(options, {
@@ -1515,39 +1475,33 @@ function gen_code(ast, options) {
         if (options.inline_script)
             ret = ret.replace(/<\x2fscript([>\/\t\n\f\r ])/gi, "<\\/script$1");
         return ret;
-    };
-
+    }
     function make_name(name) {
         name = name.toString();
         if (options.ascii_only)
             name = to_ascii(name);
         return name;
-    };
-
+    }
     function indent(line) {
         if (line == null)
             line = "";
         if (beautify)
             line = repeat_string(" ", options.indent_start + indentation * options.indent_level) + line;
         return line;
-    };
-
+    }
     function with_indent(cont, incr) {
         if (incr == null) incr = 1;
         indentation += incr;
         try { return cont.apply(null, slice(arguments, 1)); }
         finally { indentation -= incr; }
-    };
-
+    }
     function last_char(str) {
         str = str.toString();
         return str.charAt(str.length - 1);
-    };
-
+    }
     function first_char(str) {
         return str.toString().charAt(0);
-    };
-
+    }
     function add_spaces(a) {
         if (beautify)
             return a.join(" ");
@@ -1564,12 +1518,10 @@ function gen_code(ast, options) {
             }
         }
         return b.join("");
-    };
-
+    }
     function add_commas(a) {
         return a.join("," + space);
-    };
-
+    }
     function parenthesize(expr) {
         var gen = make(expr);
         for (var i = 1; i < arguments.length; ++i) {
@@ -1578,8 +1530,7 @@ function gen_code(ast, options) {
                 return "(" + gen + ")";
         }
         return gen;
-    };
-
+    }
     function best_of(a) {
         if (a.length == 1) {
             return a[0];
@@ -1590,8 +1541,7 @@ function gen_code(ast, options) {
             return a.length <= b.length ? a : b;
         }
         return best_of([ a[0], best_of(a.slice(1)) ]);
-    };
-
+    }
     function needs_parens(expr) {
         if (expr[0] == "function" || expr[0] == "object") {
             // dot/call on a literal function requires the
@@ -1615,8 +1565,7 @@ function gen_code(ast, options) {
             }
         }
         return !HOP(DOT_CALL_NO_PARENS, expr[0]);
-    };
-
+    }
     function make_num(num) {
         var str = num.toString(10), a = [ str.replace(/^0\./, ".").replace('e+', 'e') ], m;
         if (Math.floor(num) === num) {
@@ -1635,8 +1584,7 @@ function gen_code(ast, options) {
                    str.substr(str.indexOf(".")));
         }
         return best_of(a);
-    };
-
+    }
     var w = ast_walker();
     var make = w.walk;
     return w.with_walkers({
@@ -1909,8 +1857,7 @@ function gen_code(ast, options) {
             else break;
         }
         return make(th);
-    };
-
+    }
     function make_function(name, args, body, keyword, no_parens) {
         var out = keyword || "function";
         if (name) {
@@ -1919,8 +1866,7 @@ function gen_code(ast, options) {
         out += "(" + add_commas(MAP(args, make_name)) + ")";
         out = add_spaces([ out, make_block(body) ]);
         return (!no_parens && needs_parens(this)) ? "(" + out + ")" : out;
-    };
-
+    }
     function must_has_semicolon(node) {
         switch (node[0]) {
           case "with":
@@ -1939,8 +1885,7 @@ function gen_code(ast, options) {
           case "directive":
             return true;
         }
-    };
-
+    }
     function make_block_statements(statements, noindent) {
         for (var a = [], last = statements.length - 1, i = 0; i <= last; ++i) {
             var stat = statements[i];
@@ -1953,8 +1898,7 @@ function gen_code(ast, options) {
             }
         }
         return noindent ? a : MAP(a, indent);
-    };
-
+    }
     function make_switch_block(body) {
         var n = body.length;
         if (n == 0) return "{}";
@@ -1970,26 +1914,22 @@ function gen_code(ast, options) {
                 code += ";";
             return code;
         }).join(newline) + newline + indent("}");
-    };
-
+    }
     function make_block(statements) {
         if (!statements) return ";";
         if (statements.length == 0) return "{}";
         return "{" + newline + with_indent(function(){
             return make_block_statements(statements).join(newline);
         }) + newline + indent("}");
-    };
-
+    }
     function make_1vardef(def) {
         var name = def[0], val = def[1];
         if (val != null)
             name = add_spaces([ make_name(name), "=", parenthesize(val, "seq") ]);
         return name;
-    };
-
-};
-
-function split_lines(code, max_line_length) {
+    }
+}
+    function split_lines(code, max_line_length) {
     var splits = [ 0 ];
     jsp.parse(function(){
         var next_token = jsp.tokenizer(code);
@@ -1997,11 +1937,11 @@ function split_lines(code, max_line_length) {
         var prev_token;
         function current_length(tok) {
             return tok.pos - last_split;
-        };
+        }
         function split_here(tok) {
             last_split = tok.pos;
             splits.push(last_split);
-        };
+        }
         function custom(){
             var tok = next_token.apply(this, arguments);
             out: {
@@ -2021,7 +1961,7 @@ function split_lines(code, max_line_length) {
             }
             prev_token = tok;
             return tok;
-        };
+        }
         custom.context = function() {
             return next_token.context.apply(this, arguments);
         };
@@ -2030,9 +1970,8 @@ function split_lines(code, max_line_length) {
     return splits.map(function(pos, i){
         return code.substring(pos, splits[i + 1] || code.length);
     }).join("\n");
-};
-
-/* -----[ Utilities ]----- */
+}
+    /* -----[ Utilities ]----- */
 
 function repeat_string(str, i) {
     if (i <= 0) return "";
@@ -2041,9 +1980,8 @@ function repeat_string(str, i) {
     d += d;
     if (i & 1) d += str;
     return d;
-};
-
-function defaults(args, defs) {
+}
+    function defaults(args, defs) {
     var ret = {};
     if (args === true)
         args = {};
@@ -2051,20 +1989,17 @@ function defaults(args, defs) {
         ret[i] = (args && HOP(args, i)) ? args[i] : defs[i];
     }
     return ret;
-};
-
-function is_identifier(name) {
+}
+    function is_identifier(name) {
     return /^[a-z_$][a-z0-9_$]*$/i.test(name)
         && name != "this"
         && !HOP(jsp.KEYWORDS_ATOM, name)
         && !HOP(jsp.RESERVED_WORDS, name)
         && !HOP(jsp.KEYWORDS, name);
-};
-
-function HOP(obj, prop) {
+}
+    function HOP(obj, prop) {
     return Object.prototype.hasOwnProperty.call(obj, prop);
-};
-
+}
 // some utilities
 
 var MAP;
@@ -2089,7 +2024,7 @@ var MAP;
                     ret.push(val);
                 }
             }
-        };
+        }
         if (a instanceof Array) for (i = 0; i < a.length; ++i) doit();
         else for (i in a) if (HOP(a, i)) doit();
         return top.concat(ret);
@@ -2097,8 +2032,12 @@ var MAP;
     MAP.at_top = function(val) { return new AtTop(val) };
     MAP.splice = function(val) { return new Splice(val) };
     var skip = MAP.skip = {};
-    function AtTop(val) { this.v = val };
-    function Splice(val) { this.v = val };
+    function AtTop(val) {
+        this.v = val
+    }
+    function Splice(val) {
+        this.v = val
+    }
 })();
 
 /* -----[ Exports ]----- */

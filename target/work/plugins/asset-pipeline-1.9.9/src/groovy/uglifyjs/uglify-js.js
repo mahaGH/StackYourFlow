@@ -10,8 +10,7 @@ function uglify(orig_code, options){
   // ast = pro.ast_squeeze(ast, options.squeeze_options); // get an AST with compression optimizations
   var final_code = pro.gen_code(ast, options.gen_options); // compressed code here
   return final_code;
-};
-
+}
 // uglify.parser = require("./lib/parse-js");
 // uglify.uglify = require("./lib/process");
 // uglify.consolidator = require("./lib/consolidator");

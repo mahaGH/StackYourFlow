@@ -30,7 +30,7 @@ function instrument(code) {
                         analyzing.pop(this);
                 }
                 return ret;
-        };
+        }
         var new_ast = w.with_walkers({
                 "stat"     : do_stat,
                 "label"    : do_stat,

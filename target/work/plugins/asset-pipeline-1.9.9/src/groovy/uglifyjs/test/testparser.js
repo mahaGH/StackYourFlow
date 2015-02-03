@@ -405,5 +405,5 @@ function ParserTestSuite(callback){
 
 	for (var i=0; i<inps.length; ++i) {
 		callback(i, inps[i][0], inps[i][1]);
-	};
-};
+	}
+}

@@ -173,7 +173,7 @@ public abstract class PageFragmentCachingFilter extends AbstractFilter {
 			Object controller = lookupController(getContext().getControllerClass());
 			if (controller == null) {
 				log.debug("Not a controller request {}:{} {}",
-						new Object[] { request.getMethod(), request.getRequestURI(), getContext() });
+						request.getMethod(), request.getRequestURI(), getContext());
 				chain.doFilter(request, response);
 				return;
 			}
@@ -185,7 +185,7 @@ public abstract class PageFragmentCachingFilter extends AbstractFilter {
 			Method method = getContext().getMethod();
 			if (method == null) {
 				log.debug("No cacheable method found for {}:{} {}",
-						new Object[] { request.getMethod(), request.getRequestURI(), getContext() });
+						request.getMethod(), request.getRequestURI(), getContext());
 				chain.doFilter(request, response);
 				return;
 			}
@@ -194,7 +194,7 @@ public abstract class PageFragmentCachingFilter extends AbstractFilter {
 
 			if (CollectionUtils.isEmpty(cacheOperations)) {
 				log.debug("No cacheable annotation found for {}:{} {}",
-						new Object[] { request.getMethod(), request.getRequestURI(), getContext() });
+						request.getMethod(), request.getRequestURI(), getContext());
 				chain.doFilter(request, response);
 				return;
 			}
@@ -279,7 +279,7 @@ public abstract class PageFragmentCachingFilter extends AbstractFilter {
 				for (CacheOperationContext operationContext : operationsByType.get(UPDATE)) {
 					for (Cache cache : operationContext.getCaches()) {
 						log.debug("Response not ok ({}). Putting null into cache {} with key {}",
-								new Object[] { pageInfo.getStatusCode(), cache.getName(), key } );
+								pageInfo.getStatusCode(), cache.getName(), key);
 					}
 				}
 				releaseCacheLocks(operationsByType, key);
@@ -690,7 +690,7 @@ public abstract class PageFragmentCachingFilter extends AbstractFilter {
 							}
 							if (trace) {
 								log.trace("Invalidating cache key {} for operation {} on method {}",
-										new Object[] { key, evict, operationContext.method });
+										key, evict, operationContext.method);
 							}
 							cache.evict(key);
 						}
@@ -830,7 +830,7 @@ public abstract class PageFragmentCachingFilter extends AbstractFilter {
 		int timeToLive = (maxAge instanceof Integer) ? ((Integer)maxAge) : (int)pageInfo.getTimeToLiveSeconds();
 		for (Cache cache : caches) {
 			log.debug("Response ok. Adding to cache {} with key {} and ttl {}",
-					new Object[] { cache.getName(), key, getTimeToLive(element) });
+					cache.getName(), key, getTimeToLive(element));
 			put(cache, key, pageInfo, timeToLive);
 		}
 	}

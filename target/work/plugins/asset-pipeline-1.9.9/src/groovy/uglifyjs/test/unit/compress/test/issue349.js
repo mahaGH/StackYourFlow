@@ -1,25 +1,25 @@
 (function () {
-  var cake
-  if (noFreeCakes) return /* I would
+  var cake;
+  if (noFreeCakes) return; /* I would
                               insert something
                               there, but I'm sort
                               of lazy so whatever.
-  */ cake = new FreeCake()
+  */ cake = new FreeCake();
   return cake
 })()
 
 (function () {
-  var cake
-  if (noFreeCakes) return /* I would insert something there, */ /*
+  var cake;
+  if (noFreeCakes) return; /* I would insert something there, */ /*
                              but I'm sort of lazy so
-  */ /*                      whatever. */ cake = new FreeCake()
+  */ /*                      whatever. */ cake = new FreeCake();
   return cake
 })()
 
 (function () {
-  var cake
-  if (noFreeCakes) return // I would insert something there, but I'm sort of lazy so whatever.
-  cake = new FreeCake()
+  var cake;
+  if (noFreeCakes) return; // I would insert something there, but I'm sort of lazy so whatever.
+  cake = new FreeCake();
   return cake
-})()
+})();
 

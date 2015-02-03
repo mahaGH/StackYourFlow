@@ -8,7 +8,7 @@ if (longname+1) {
     x=3;
     if (x) var z = 7;
 }
-z=1,y=1,x=1
+z=1,y=1,x=1;
 
 g+=1;
 h=g;

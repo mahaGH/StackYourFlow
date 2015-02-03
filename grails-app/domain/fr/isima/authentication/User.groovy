@@ -16,7 +16,7 @@ class User {
 	boolean accountLocked
 	boolean passwordExpired
 
-	// ceux qui ont voté pour lui
+	// votes for user's posts
 	static hasMany = [votes:Vote]
 
 	static transients = ['springSecurityService']

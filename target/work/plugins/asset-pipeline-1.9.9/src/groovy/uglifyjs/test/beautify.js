@@ -25,4 +25,4 @@ function time_it(name, cont) {
         var t1 = new Date().getTime();
         try { return cont(); }
         finally { sys.debug("// " + name + ": " + ((new Date().getTime() - t1) / 1000).toFixed(3) + " sec."); }
-};
+}

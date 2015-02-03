@@ -19,10 +19,10 @@ function ast_squeeze_more(ast) {
         ret = cont();
         scope = save;
         return ret;
-    };
+    }
     function _lambda(name, args, body) {
         return [ this[0], name, args, with_scope(body.scope, curry(MAP, body, walk)) ];
-    };
+    }
     return w.with_walkers({
         "toplevel": function(body) {
             return [ this[0], with_scope(this.scope, curry(MAP, body, walk)) ];
@@ -73,9 +73,8 @@ function ast_squeeze_more(ast) {
     }, function() {
         return walk(pro.ast_add_scope(ast));
     });
-};
-
-exports.ast_squeeze_more = ast_squeeze_more;
+}
+    exports.ast_squeeze_more = ast_squeeze_more;
 
 // Local variables:
 // js-indent-level: 4

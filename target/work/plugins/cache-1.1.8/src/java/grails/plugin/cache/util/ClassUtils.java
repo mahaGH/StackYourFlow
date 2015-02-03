@@ -39,10 +39,10 @@ public class ClassUtils {
         final String getterName = GrailsNameUtils.getGetterName(propertyOrFieldName);
         final Class<? extends Object> objectClass = object.getClass();
         try {
-            final Method method = objectClass.getMethod(getterName, new Class[0]);
+            final Method method = objectClass.getMethod(getterName);
             if (method != null) {
                 ReflectionUtils.makeAccessible(method);
-                return method.invoke(object, new Object[0]);
+                return method.invoke(object);
             }
         } catch (Exception e) {
         }

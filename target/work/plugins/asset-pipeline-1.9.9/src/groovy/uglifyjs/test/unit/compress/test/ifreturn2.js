@@ -13,4 +13,4 @@ function y(a) {
         return a;
 
     return null;
-};
+}

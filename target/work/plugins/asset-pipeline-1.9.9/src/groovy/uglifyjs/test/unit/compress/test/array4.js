@@ -1,6 +1,7 @@
 (function(){
         (function(){
-                return new Array(1, 2, 3);
+                return [1, 2, 3];
         })();
-        function Array(){};
+        function Array() {
+        }
 })();

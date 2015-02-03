@@ -17,8 +17,7 @@ function compress(code) {
 	ast = pro.ast_squeeze(ast, { no_warnings: true });
         ast = pro.ast_squeeze_more(ast);
 	return pro.gen_code(ast);
-};
-
+}
 var testDir = path.join(scriptsPath, "compress", "test");
 var expectedDir = path.join(scriptsPath, "compress", "expected");
 
@@ -42,8 +41,7 @@ function getTester(script) {
 
 		test.done();
 	};
-};
-
+}
 var tests = {};
 
 var scripts = fs.readdirSync(testDir);

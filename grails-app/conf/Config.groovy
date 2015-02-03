@@ -88,13 +88,21 @@ grails.hibernate.osiv.readonly = false
 //configuration for encryption algorithm
 grails.plugin.springsecurity.password.algorithm='bcrypt'
 
+//redirection after registration
+grails.plugin.springsecurity.ui.register.postRegisterUrl = 'question/index'
+
+// parameters of registration mail
+grails.plugin.springsecurity.ui.register.emailBody = 'Thank you for you registration; We hope you will love our site.'
+grails.plugin.springsecurity.ui.register.emailFrom = 'admin@stackyourflow.fr'
+grails.plugin.springsecurity.ui.register.emailSubject = 'Welcome to StackYourFlow'
+
 environments {
     development {
         grails.logging.jul.usebridge = true
     }
     production {
         grails.logging.jul.usebridge = false
-        // TODO: grails.serverURL = "http://www.changeme.com"
+        grails.serverURL = "http://www.stackyourflow.com"
     }
 }
 
@@ -132,6 +140,9 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/**/js/**':                      ['permitAll'],
 	'/**/css/**':                     ['permitAll'],
 	'/**/images/**':                  ['permitAll'],
-	'/**/favicon.ico':                ['permitAll']
+	'/**/favicon.ico':                ['permitAll'],
+    '/login/**':                      ['permitAll'],
+    '/logout/**':                     ['permitAll']
 ]
 
+grails.plugin.springsecurity.logout.postOnly = false;
