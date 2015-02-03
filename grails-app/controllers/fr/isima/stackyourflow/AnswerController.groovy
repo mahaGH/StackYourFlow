@@ -24,6 +24,8 @@ class AnswerController {
         respond new Answer(params)
     }
 
+
+
     @Transactional
     def save(Answer answerInstance) {
         if (answerInstance == null) {
@@ -39,6 +41,7 @@ class AnswerController {
         answerInstance.question.answers.add(answerInstance);
         answerInstance._creationDate = new Date();
         answerInstance.question.save();
+
         answerInstance.save flush: true
 
 

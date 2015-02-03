@@ -2,42 +2,21 @@
 
 <div class="panel panel-default">
 
+	<div class="panel-heading">
+
+		Answered by <g:link controller="user" action="show" id="${answer?.user?.id}">${answer?.user?.username}</g:link> on ${answer?._creationDate}
+	</div>
+
+
 	<div class="panel-body" id="ans${answer.id}">
+
+		<g:render template="/question/templateScoreView" model="[questionInstance:answer]" ></g:render>
+
 		<g:if test="${answer?._score}">
 
 			<span id="_score-label" class="property-label"><g:message code="a._score.label" default="Score" /></span>
 
 			<span class="property-value" aria-labelledby="_score-label"><g:fieldValue bean="${answer}" field="_score"/></span>
-			<br>
-		</g:if>
-
-		<g:if test="${answer?._creationDate}">
-
-				<span id="_creationDate-label" class="property-label"><g:message code="comment._creationDate.label" default="Creation Date" /></span>
-
-				<span class="property-value" aria-labelledby="_creationDate-label"><g:formatDate date="${answer?._creationDate}" /></span>
-
-
-		</g:if>
-
-		<g:if test="${answer?.user}">
-			<span id="user-label" class="property-label"><g:message code="a.user.label" default="User" /></span>
-
-			<span class="property-value" aria-labelledby="user-label"><g:link controller="user" action="show" id="${answer?.user?.id}">${a?.user?.encodeAsHTML()}</g:link></span>
-			<br>
-		</g:if>
-
-		<g:if test="${answer?.comments}">
-
-			<span id="comments-label" class="property-label"><g:message code="a.comments.label" default="Comments" /></span>
-			<g:render template="/question/templateCommentView" collection="${answer.comments}" var="comment"></g:render>
-
-
-			<g:each in="${answer.comments}" var="c">
-				<span class="property-value" aria-labelledby="comments-label"><g:link controller="comment" action="show" id="${c.id}">${c?.encodeAsHTML()}</g:link></span>
-			</g:each>
-
-
 			<br>
 		</g:if>
 
@@ -52,12 +31,26 @@
 			<br>
 		</g:if>
 
-		<g:form url="[resource:answer, action:'delete']" method="DELETE">
-			<fieldset class="buttons">
-				<g:remoteLink class="edit" action="editMode" id="${answer.id}" update="ans${answer.id}"><g:message code="default.button.edit.label" default="Edit" /></g:remoteLink>
-				<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-			</fieldset>
-		</g:form>
+
+		<g:if test="${answer?.comments}">
+
+			<span id="comments-label" class="property-label"><g:message code="a.comments.label" default="Comments" /></span>
+			<br>
+			<g:render template="/question/templateCommentView" collection="${answer.comments}" var="comment"></g:render>
+
+			<br>
+		</g:if>
+
+		<g:isOwner owner="${answer?.user}">
+			<g:form url="[resource:answer, action:'delete']" method="DELETE">
+				<fieldset class="buttons">
+
+						<g:remoteLink class="edit" action="editMode" id="${answer.id}" update="ans${answer.id}"><g:message code="default.button.edit.label" default="Edit Answer" /></g:remoteLink>
+						<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete Answer')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+
+				</fieldset>
+			</g:form>
+		</g:isOwner>
 
 
 
@@ -69,8 +62,7 @@
 
 	<div class="panel-footer" id="commentaire_ans${answer.id}">
 
-		<g:remoteLink action="leaveAComment" id="${answer.id}" update="commentaire_ans${answer.id}">Leave a comment</g:remoteLink>
-
+			<g:render template="templateLeaveACommentView" model="[answer:answer]"></g:render>
 	</div>
 </div>
 

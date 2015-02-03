@@ -9,7 +9,7 @@
 
 				<span id="user-label" class="property-label"><g:message code="comment.user.label" default="User" /></span>
 
-				<span class="property-value" aria-labelledby="user-label"><g:link controller="user" action="show" id="${comment?.user?.id}">${commentInstance?.user?.encodeAsHTML()}</g:link></span>
+				<span class="property-value" aria-labelledby="user-label"><g:link controller="user" action="show" id="${comment?.user?.id}">${comment?.user?.username}</g:link></span>
 
 
 		</g:if>
@@ -31,6 +31,17 @@
 
 
 		</g:if>
+
+		<g:isOwner owner="${comment.user}">
+			<g:form url="[resource:comment, action:'delete']" method="DELETE">
+				<fieldset class="buttons">
+					<g:remoteLink class="edit" action="editComment" id="${comment.id}" update="comment${comment.id}"><g:message code="default.button.edit.label" default="Edit" /></g:remoteLink>
+					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+				</fieldset>
+			</g:form>
+		</g:isOwner>
+
+
 	</div>
 </div>
 

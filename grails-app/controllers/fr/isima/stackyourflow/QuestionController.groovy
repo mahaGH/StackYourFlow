@@ -1,5 +1,7 @@
 package fr.isima.stackyourflow
 
+import fr.isima.authentication.User
+
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
@@ -13,7 +15,7 @@ class QuestionController {
     //la question qui est affichée
     Question question;
 
-    List<Post> posts = new ArrayList<>();
+    Post post;
 
 
 
@@ -25,7 +27,11 @@ class QuestionController {
     def show(Question questionInstance) {
         Answer ans = new Answer();
         question = questionInstance;
-        respond questionInstance, [answerInstance: ans];
+        User currentUser = springSecurityService.currentUser
+        post = null;
+        //question.user = springSecurityService.currentUser
+        respond questionInstance,[answerInstance: ans]
+        //respond currentUser
     }
 
 
@@ -34,6 +40,62 @@ class QuestionController {
         render(template:'templateAnswerEditView', model: [answer: answerInstance])
 
     }
+
+    def editComment(Comment commentInstance)
+    {
+        render(template: 'templateCommentEditView',model: [comment:commentInstance])
+    }
+
+    def votePlus(Post postInstance)
+    {
+        User user = springSecurityService.currentUser
+        postInstance._score++;
+
+        Vote vote = new Vote();
+        vote.refTo = postInstance;
+        vote.value=1;
+        vote.voter=user;
+
+        if (postInstance.user.votes == null)
+            postInstance.user.votes = new ArrayList<>();
+
+        postInstance.user.votes.add(vote);
+        postInstance.user.save();
+        postInstance.save flush:true
+
+        request.withFormat {
+            form multipartForm {
+                redirect postInstance.Redirect()
+            }
+            '*' { respond commentInstance, [status: CREATED] }
+        }
+    }
+
+    def voteMinus(Post postInstance)
+    {
+        User user = springSecurityService.currentUser
+        postInstance._score--;
+
+        Vote vote = new Vote();
+        vote.refTo = postInstance;
+        vote.value=-1;
+        vote.voter=user;
+
+        if (postInstance.user.votes == null)
+            postInstance.user.votes = new ArrayList<>();
+
+        postInstance.user.votes.add(vote);
+        postInstance.user.save();
+        postInstance.save flush:true
+
+        request.withFormat {
+            form multipartForm {
+                redirect postInstance.Redirect()
+            }
+            '*' { respond commentInstance, [status: CREATED] }
+        }
+    }
+
 
     @Transactional
     def saveComment(Comment commentInstance) {
@@ -47,10 +109,15 @@ class QuestionController {
             return
         }
 
-        if (posts.size() -1 >= 0)
+        commentInstance.user = springSecurityService.currentUser
+       // log.info commentInstance.user.toString()
+       // log.info springSecurityService.currentUser.toString()
+        if (post != null)
         {
-            commentInstance.refTo = posts.get(posts.size() - 1)
-            posts.remove(posts.size()-1);
+            commentInstance.refTo = post
+            post = null;
+
+
 
             if (commentInstance.refTo.comments == null)
                 commentInstance.refTo.comments = new ArrayList<>();
@@ -80,12 +147,30 @@ class QuestionController {
         //params = ${postInstance.id}
         //comment.refTo = postInstance;
         Comment comment = new Comment();
-        posts.add(postInstance);
 
-       // respond commentInstance:comment
-        render template: "templateCommentCreate",model: [commentInstance:comment]
+        if (post == null)
+        {
+            post = postInstance
+            // respond commentInstance:comment
+            render template: "templateCommentCreate",model: [commentInstance:comment]
+            render template: "templateCancelLeaveACommentView", model:[answer: postInstance]
+        };
+        else
+        {
+
+            render template: 'templateLeaveACommentView', model: [answer: postInstance]
+            render text:"<br>un seul commentaire peut être crée à la fois\n"
+
+        }
+
+
     }
 
+    def annulerComment(Post postInstance)
+    {
+        post = null;
+        render(template: 'templateLeaveACommentView', model: [answer: postInstance])
+    }
 
 
 
@@ -109,6 +194,8 @@ class QuestionController {
         }
     }
 
+    def springSecurityService
+
     @Transactional
     def saveAnswer(Answer answerInstance)
     {
@@ -123,12 +210,17 @@ class QuestionController {
             }
 
 
+            answerInstance.user = springSecurityService.currentUser
+            log.info(springSecurityService.currentUser.toString())
+
            // answerInstance.question = questionInstance;
             answerInstance.question = question;
             answerInstance._creationDate = new Date();
             if (answerInstance.question.answers == null ) answerInstance.question.answers = new ArrayList<Answer>();
 
+
             answerInstance.question.answers.add(answerInstance);
+
 
             //answerInstance.save();
             answerInstance.save flush: true
@@ -149,6 +241,7 @@ class QuestionController {
 
 
 
+
     @Transactional
     def save(Question questionInstance) {
         if (questionInstance == null) {
@@ -163,7 +256,8 @@ class QuestionController {
 
         questionInstance._score = 0
         questionInstance.answers = new ArrayList<Answer>()
-        questionInstance._creationDate = new Date();
+        questionInstance._creationDate = new Date()
+        questionInstance.user = springSecurityService.currentUser
         questionInstance.save flush: true
 
         request.withFormat {

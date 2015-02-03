@@ -1,20 +1,28 @@
 package fr.isima.authentication
 
+import fr.isima.stackyourflow.Post
+import fr.isima.stackyourflow.Vote
+
 class User {
 
 	transient springSecurityService
 
 	String username
 	String password
-	String mail
+	String email
+	int score
 	boolean enabled = true
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired
 
+	// ceux qui ont voté pour lui
+	static hasMany = [votes:Vote]
+
 	static transients = ['springSecurityService']
 
 	static constraints = {
+		votes nullable: true
 		username blank: false, unique: true
 		password blank: false
 	}
@@ -35,6 +43,13 @@ class User {
 		if (isDirty('password')) {
 			encodePassword()
 		}
+	}
+
+	def votePlus(Post postInstance){
+		postInstance._score++;
+	}
+	def voteMinus(Post postInstance){
+		postInstance._score--;
 	}
 
 	protected void encodePassword() {
