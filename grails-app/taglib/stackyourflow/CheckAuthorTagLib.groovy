@@ -23,7 +23,7 @@ class CheckAuthorTagLib {
         def owner = attrs?.owner
 
         //id == 1 --> admin
-        if(loggedInUser?.id == owner?.id || loggedInUser?.id == 1)
+        if(loggedInUser?.id != owner?.id || loggedInUser?.id == 1)
         {
             out << body()
         }
