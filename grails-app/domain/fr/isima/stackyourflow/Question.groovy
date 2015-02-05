@@ -7,10 +7,12 @@ class Question extends Post {
 
     public Question() {
         _score = 0;
+        resolved = false;
     }
 
     String _title
     String _url
+    boolean resolved;
     static hasMany = [answers:Answer, tags:Tag]
 
     @Override
@@ -18,7 +20,15 @@ class Question extends Post {
         return (Question) this;
     }
 
+    @Override
+    public void resolve()
+    {
+        resolved = true;
+    }
 
+    static mapping = {
+        answers sort: '_score' , order: 'desc'
+    }
 
     static constraints = {
         _url nullable : true

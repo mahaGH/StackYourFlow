@@ -4,7 +4,9 @@
 
 	<div class="panel-body" id="question">
 
-
+		<g:if test="${questionInstance?.resolved}">
+			<asset:image src="valider.png"/>
+		</g:if>
 		<g:if test="${questionInstance?.user}">
 			<li class="fieldcontain">
 				<span id="user-label" class="property-label"><g:message code="question.user.label" default="User" /></span>
@@ -66,16 +68,16 @@
 
 		<g:if test="${questionInstance?.tags}">
 			<li class="fieldcontain">
-				<span id="tags-label" class="property-label"><g:message code="question.tags.label" default="Tags" /></span>
 
 				<g:each in="${questionInstance.tags}" var="t">
-					<span class="property-value" aria-labelledby="tags-label"><g:link controller="tag" action="show" id="${t.id}">${t?.encodeAsHTML()}</g:link></span>
+					<span class="label label-info"><g:link controller="tag" action="show" id="${t.id}">${t?._title}</g:link></span>
 				</g:each>
 
 			</li>
+			<br>
 		</g:if>
 
-		<g:isOwner owner="${questionInstance.user}">
+		<g:isOwner owner="${questionInstance?.user}">
 			<g:form url="[resource:questionInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
 					<g:link class="edit" action="edit" resource="${questionInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
@@ -88,10 +90,12 @@
 
 	</div>
 
-	<div class="panel-footer" id="commentaire_ans${questionInstance.id}">
-		<g:render template="templateLeaveACommentView" model="[answer:questionInstance]"></g:render>
+	<g:isLogged>
+		<div class="panel-footer" id="commentaire_ans${questionInstance?.id}">
+			<g:render template="templateLeaveACommentView" model="[answer:questionInstance]"></g:render>
 
-	</div>
+		</div>
+	</g:isLogged>
 </div>
 
 <g:if test="${questionInstance?.comments}">
@@ -99,7 +103,7 @@
 
 		<span id="comments-label" class="property-label"><g:message code="a.comments.label" default="Comments" /></span>
 		<br>
-		<g:render template="/question/templateCommentView" collection="${questionInstance.comments}" var="comment"></g:render>
+		<g:render template="/question/templateCommentView" collection="${questionInstance?.comments}" var="comment"></g:render>
 
 		<br>
 	</li>
@@ -109,7 +113,7 @@
 			<li class="fieldcontain">
 				<span id="answers-label" class="property-label"><g:message code="question.answers.label" default="${questionInstance.answers.size()} Answers" /></span>
 				<br>
-				<g:render template="/question/templateAnswerView" collection="${questionInstance.answers}" var="answer"></g:render>
+				<g:render template="/question/templateAnswerView" collection="${questionInstance?.answers}" var="answer"></g:render>
 
 
 			</li>

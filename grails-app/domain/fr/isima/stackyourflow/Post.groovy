@@ -12,6 +12,9 @@ class Post extends Message{
         return new Question();
     }
 
+    public void resolve() {
+
+    }
 
     def share(){}
 

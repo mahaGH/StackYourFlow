@@ -7,7 +7,7 @@ import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 
 @Transactional(readOnly = true)
-@Secured(['ROLE_USER'])
+@Secured("permitAll")
 class QuestionController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
@@ -25,6 +25,14 @@ class QuestionController {
         respond Question.list(params), model: [questionInstanceCount: Question.count()]
     }
 
+    def unanswered(Integer max) {
+        params.max = Math.min(max ?: 10, 100)
+        respond Question.findAllByResolvedNotEqual(true), model: [questionInstanceCount: Question.count()]
+
+
+
+    }
+
     def show(Question questionInstance) {
         Answer ans = new Answer();
         question = questionInstance;
@@ -33,6 +41,20 @@ class QuestionController {
         //question.user = springSecurityService.currentUser
         respond questionInstance,[answerInstance: ans]
         //respond currentUser
+    }
+
+    def resolve(Answer ans) {
+        ans.resolve();
+        ans.save flush: true
+
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'Answer.label', default: 'Answer'), ans.id])
+                redirect ans.question
+            }
+            '*' { respond ans, [status: OK] }
+        }
+
     }
 
 
@@ -243,7 +265,9 @@ class QuestionController {
 
 
 
+
     @Transactional
+    @Secured(['ROLE_USER'])
     def save(Question questionInstance) {
         if (questionInstance == null) {
             notFound()

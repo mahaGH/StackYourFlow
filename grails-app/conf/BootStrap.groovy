@@ -1,4 +1,5 @@
 import fr.isima.authentication.*
+import fr.isima.stackyourflow.Tag
 
 class BootStrap {
 
@@ -12,6 +13,12 @@ class BootStrap {
         UserRole.create user1, adminRole, true
         UserRole.create user1, userRole, true
         UserRole.create user2, userRole, true
+
+
+        def tagJava = new Tag(_title: "java").save(flush: true)
+        def tagJsf = new Tag(_title: "jsf").save(flush: true)
+
+
     }
     def destroy = {
     }

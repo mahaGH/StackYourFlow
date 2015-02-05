@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -18,7 +19,36 @@
 	</head>
 	<body>
 		<div class="Banner" role="banner"><asset:image src="renard.jpg"/>Stack Your Flow</div>
-		<g:layoutBody/>
+
+
+		<div class="nav" role="navigation">
+			<ul>
+				<li><g:link controller="question"> Questions</g:link></li>
+				<li><g:link controller="tag"> Tags</g:link></li>
+				<li><g:link controller="user"> Users</g:link></li>
+				<li><g:link controller="question" action="unanswered"> Unanswered</g:link></li>
+
+				<sec:ifAllGranted roles="ROLE_ADMIN">
+				<li><g:link controller="tag" action="create">New Tag</g:link></li>
+				</sec:ifAllGranted>
+				<g:isLogged>
+					<li><g:link controller="question" action="create"> Ask Question</g:link></li>
+
+					<!--<li><a class="home" href="${createLink(uri: '/question')}"><g:message code="default.home.label"/></a></li>-->
+					<li><g:link controller="logout"> <g:message code="springSecurity.logout.title" /></g:link></li>
+
+
+				</g:isLogged>
+				<g:isNotLogged>
+					<li><g:link controller="login"> LogIn</g:link></li>
+				</g:isNotLogged>
+
+
+
+
+			</ul>
+		</div>
+	<g:layoutBody/>
 		<div class="footer" role="contentinfo"></div>
 		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
 	</body>

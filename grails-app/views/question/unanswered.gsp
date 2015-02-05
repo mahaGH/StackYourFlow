@@ -1,4 +1,3 @@
-
 <%@ page import="fr.isima.stackyourflow.Question" %>
 <!DOCTYPE html>
 <html>

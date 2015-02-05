@@ -35,7 +35,7 @@
 		<g:message code="question.tags.label" default="Tags" />
 		
 	</label>
-	<g:select name="tags" from="${fr.isima.stackyourflow.Tag.list()}" multiple="multiple" optionKey="id" size="5" value="${questionInstance?.tags*.id}" class="many-to-many"/>
+	<g:select name="tags" from="${fr.isima.stackyourflow.Tag.list()}" multiple="multiple" optionKey="id" optionValue="_title" size="5" value="${questionInstance?.tags*.id}" class="many-to-many"/>
 
 </div>
 
