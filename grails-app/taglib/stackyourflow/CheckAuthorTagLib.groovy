@@ -13,15 +13,27 @@ class CheckAuthorTagLib {
 
         if (springSecurityService.isLoggedIn()) {
             def loggedInUser = springSecurityService.currentUser
+            def roles = springSecurityService.getAuthentication().getAuthorities()
+            def admin = false;
+
+            for (def role : roles)
+            {
+                if (role.authority.equals("ROLE_ADMIN"))
+                {
+                    admin = true;
+                    break;
+                }
+            }
+
             def owner = attrs?.owner
 
-
             //id == 1 --> admin
-            //loggedInUser.id == owner.id --> utilisateur courrant == createur du post
-            if (loggedInUser?.id == owner?.id || loggedInUser?.id == 1) {
+            if (loggedInUser?.id == owner?.id || admin) {
                 out << body()
             }
         }
+
+
     }
 
     def isNotOwner = { attrs, body ->
