@@ -10,7 +10,7 @@
 // if (System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
-
+import pl.burningice.plugins.image.engines.scale.ScaleType
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
 // The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
@@ -146,3 +146,17 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 ]
 
 grails.plugin.springsecurity.logout.postOnly = false;
+
+
+/*
+bi.User = [
+        outputDir: 'assets/images',
+        images: ['large':[scale:[width:800, height:600, type:ScaleType.APPROXIMATE]],
+                 'small':[scale:[width:100, height:100, type:ScaleType.ACCURATE]]],
+        constraints:[
+                nullable:true,
+                maxSize:500000,
+                contentType:['image/gif', 'image/png']
+        ]
+
+]*/

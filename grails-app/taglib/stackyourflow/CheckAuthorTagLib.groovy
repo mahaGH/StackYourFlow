@@ -36,6 +36,21 @@ class CheckAuthorTagLib {
 
     }
 
+    def isOwnerNotAdmin = { attrs, body ->
+
+        if (springSecurityService.isLoggedIn()) {
+            def loggedInUser = springSecurityService.currentUser
+            def owner = attrs?.owner
+
+            //id == 1 --> admin
+            if (loggedInUser?.id == owner?.id ) {
+                out << body()
+            }
+        }
+
+
+    }
+
     def isNotOwner = { attrs, body ->
 
         if (springSecurityService.isLoggedIn()) {
@@ -58,6 +73,47 @@ class CheckAuthorTagLib {
             if (loggedInUser?.id != owner?.id || admin) {
                 out << body()
             }
+        }
+
+    }
+
+    def currentUser = { attrs, body ->
+
+
+        if (springSecurityService.isLoggedIn())
+        {
+         def user = springSecurityService.currentUser
+          out << render(template: "/layouts/templateUserInfo", model: [userInstance:user])
+        }
+       // out << "<g:render template=\"" + template + "\" model=\"[userInstance:${springSecurityService.currentUser}\"] />"
+    }
+
+    def isOwnerOrSimpleUser = { attrs, body ->
+
+        if (springSecurityService.isLoggedIn()) {
+            def loggedInUser = springSecurityService.currentUser
+            def roles = springSecurityService.getAuthentication().getAuthorities()
+            def admin = false;
+
+            for (def role : roles)
+            {
+                if (role.authority.equals("ROLE_ADMIN"))
+                {
+                    admin = true;
+                    break;
+                }
+            }
+
+            def owner = attrs?.owner
+
+            //id == 1 --> admin
+            if (loggedInUser?.id == owner?.id || admin == false) {
+                out << body()
+            }
+        }
+        else
+        {
+            out << body()
         }
 
     }

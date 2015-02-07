@@ -83,6 +83,7 @@ class QuestionController {
             postInstance.user.votes = new ArrayList<>();
 
         postInstance.user.votes.add(vote);
+        postInstance.user.score++;
         postInstance.user.save();
         postInstance.save flush:true
 
@@ -108,6 +109,7 @@ class QuestionController {
             postInstance.user.votes = new ArrayList<>();
 
         postInstance.user.votes.add(vote);
+        postInstance.user.score--;
         postInstance.user.save();
         postInstance.save flush:true
 

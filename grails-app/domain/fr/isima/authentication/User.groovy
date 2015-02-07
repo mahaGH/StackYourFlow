@@ -3,6 +3,8 @@ package fr.isima.authentication
 import fr.isima.stackyourflow.Post
 import fr.isima.stackyourflow.Vote
 
+
+
 class User {
 
 	transient springSecurityService
@@ -15,6 +17,13 @@ class User {
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired
+	String nom
+	String prenom
+	String adresse
+	Date birth
+	byte[] img
+	String avatarType
+
 
 	// votes for user's posts
 	static hasMany = [votes:Vote]
@@ -25,6 +34,13 @@ class User {
 		votes nullable: true
 		username blank: false, unique: true
 		password blank: false
+		nom nullable: true
+		prenom nullable: true
+		adresse nullable: true
+		birth nullable: true
+		img (nullable:true, maxSize: 160384 /* 1600K */)
+		avatarType nullable: true
+
 	}
 
 	static mapping = {

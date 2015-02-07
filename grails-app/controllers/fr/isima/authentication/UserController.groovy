@@ -6,10 +6,18 @@ import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
-@Secured(['ROLE_ADMIN'])
+@Secured('permitAll')
 class UserController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [save: "POST", update: "POST", delete: "DELETE"]
+    private static final okcontents = ['image/png', 'image/jpeg', 'image/gif']
+
+
+    def springSecurityService
+
+    def getCurrent() {
+        return springSecurityService.currentUser
+    }
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -20,6 +28,7 @@ class UserController {
         respond userInstance
     }
 
+    @Secured(['ROLE_ADMIN'])
     def create() {
         respond new User(params)
     }
@@ -36,15 +45,41 @@ class UserController {
             return
         }
 
-        userInstance.save flush: true
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'user.label', default: 'User'), userInstance.id])
-                redirect userInstance
-            }
-            '*' { respond userInstance, [status: CREATED] }
+        def f = request.getFile('avatar')
+
+        userInstance.img = f.bytes
+        userInstance.avatarType = f.contentType
+
+        flash.message = "Avatar (${userInstance.avatarType}, ${userInstance.img.size()} bytes) uploaded."
+
+       if (! userInstance.save(flush: true) ) {
+           userInstance.img = null
+           userInstance.avatarType = null
+           respond userInstance.errors, view: 'create'
+       }
+        else {
+           request.withFormat {
+               form multipartForm {
+                   flash.message = message(code: 'default.created.message', args: [message(code: 'user.label', default: 'User'), userInstance.id])
+                   redirect userInstance
+               }
+               '*' { respond userInstance, [status: CREATED] }
+           }
+       }
+    }
+
+    def avatar_image() {
+        def avatarUser = User.get(params.id)
+        if (!avatarUser || !avatarUser.img || !avatarUser.avatarType) {
+            response.sendError(404)
+            return
         }
+        response.contentType = avatarUser.avatarType
+        response.contentLength = avatarUser.img.size()
+        OutputStream out = response.outputStream
+        out.write(avatarUser.img)
+        out.close()
     }
 
     def edit(User userInstance) {
@@ -63,14 +98,30 @@ class UserController {
             return
         }
 
-        userInstance.save flush: true
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
-                redirect userInstance
+        def f = request.getFile('avatar')
+
+        if (okcontents.contains(f.contentType)) {
+            userInstance.img = f.bytes
+
+            userInstance.avatarType = f.contentType
+        }
+
+      //  flash.message = "Avatar (${userInstance.avatarType}, ${userInstance.img.size()} bytes) uploaded."
+
+        if (! userInstance.save(flush: true) ) {
+            userInstance.img = null
+            userInstance.avatarType = null
+            respond userInstance.errors, view: 'edit'
+        }
+        else {
+            request.withFormat {
+                form multipartForm {
+                    flash.message = message(code: 'default.updated.message', args: [message(code: 'User.label', default: 'User'), userInstance.id])
+                    redirect userInstance
+                }
+                '*' { respond userInstance, [status: OK] }
             }
-            '*' { respond userInstance, [status: OK] }
         }
     }
 

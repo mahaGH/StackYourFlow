@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -20,7 +19,12 @@
 	<body>
 		<div class="Banner" role="banner"><asset:image src="renard.jpg"/>Stack Your Flow</div>
 
+		<g:isLogged>
+			<g:currentUser/>
 
+
+
+		</g:isLogged>
 		<div class="nav" role="navigation">
 			<ul>
 				<li><g:link controller="question"> Questions</g:link></li>
