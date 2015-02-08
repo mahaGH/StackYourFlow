@@ -1,5 +1,6 @@
 package fr.isima.stackyourflow
 
+import fr.isima.authentication.User
 import grails.plugin.springsecurity.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*

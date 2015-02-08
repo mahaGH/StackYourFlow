@@ -1,5 +1,6 @@
 package fr.isima.authentication
 
+import fr.isima.stackyourflow.Badge
 import fr.isima.stackyourflow.Post
 import fr.isima.stackyourflow.Vote
 
@@ -26,7 +27,7 @@ class User {
 
 
 	// votes for user's posts
-	static hasMany = [votes:Vote]
+	static hasMany = [votes:Vote,badges:Badge]
 
 	static transients = ['springSecurityService']
 
@@ -45,6 +46,7 @@ class User {
 
 	static mapping = {
 		password column: '`password`'
+		votes cascade: "all-delete-orphan"
 	}
 
 	Set<Role> getAuthorities() {

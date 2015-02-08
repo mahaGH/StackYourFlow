@@ -18,14 +18,15 @@
 			<table>
 			<thead>
 					<tr>
+
+
+						<th><g:message code="default.question.attrs._title" default="Title" /></th>
 					
-						<th><g:message code="question._title.label" default="Title" /></th>
+						<g:sortableColumn property="_score" title="${message(code: 'default.question.attrs.score', default: 'Score')}" />
 					
-						<g:sortableColumn property="_score" title="${message(code: 'question._score.label', default: 'Score')}" />
+						<g:sortableColumn property="_text" title="${message(code: 'default.question.attrs.Text', default: 'Text')}" />
 					
-						<g:sortableColumn property="_text" title="${message(code: 'question._text.label', default: 'Text')}" />
-					
-						<g:sortableColumn property="user" title="${message(code: 'question.user.label', default: 'User')}" />
+						<g:sortableColumn property="user" title="${message(code: 'default.question.attrs.user', default: 'User')}" />
 
 					</tr>
 				</thead>

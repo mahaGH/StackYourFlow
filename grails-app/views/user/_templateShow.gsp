@@ -123,4 +123,13 @@
 	<img width="60.0em" height="100.0em" src="${createLink(controller:'user', action:'avatar_image', id:userInstance.id)}" />
 </g:if>
 
+<g:if test="${userInstance?.badges}">
+	<li class="fieldcontain">
+
+		<g:each in="${userInstance.badges}" var="u">
+			<span class="label label-info" aria-labelledby="users-label"><g:link controller="badge" action="show" id="${u.id}">${u._name}</g:link></span>
+		</g:each>
+
+	</li>
+</g:if>
 </g:isOwnerOrSimpleUser>

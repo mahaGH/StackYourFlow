@@ -6,7 +6,7 @@ package fr.isima.stackyourflow
 class Post extends Message{
 
     int _score
-    static hasMany = [comments:Comment]
+    static hasMany = [comments:Comment, votes:Vote]
 
     public Question Redirect() {
         return new Question();
@@ -18,8 +18,15 @@ class Post extends Message{
 
     def share(){}
 
+    static mapping = {
+
+        votes  cascade: "all-delete-orphan"
+    }
+
     static constraints = {
         comments nullable: true
         user nullable : true
+
+
     }
 }

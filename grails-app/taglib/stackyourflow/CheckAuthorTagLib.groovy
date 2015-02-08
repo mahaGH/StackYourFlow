@@ -77,6 +77,17 @@ class CheckAuthorTagLib {
 
     }
 
+    def progressBar = { attrs, body ->
+        if (springSecurityService.isLoggedIn())
+        {
+            def user = springSecurityService.currentUser
+            def badge = attrs.badge
+            out << render(template: "/badge/userAdvance", model: [userInstance:user,badge:badge])
+        }
+        // out << "<g:render template=\"" + template + "\" model=\"[userInstance:${springSecurityService.currentUser}\"] />"
+    }
+
+
     def currentUser = { attrs, body ->
 
 

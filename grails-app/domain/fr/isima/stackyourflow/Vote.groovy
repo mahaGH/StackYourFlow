@@ -7,10 +7,14 @@ import fr.isima.authentication.User
  */
 class Vote {
 
-    static belongsTo = [voter:User]
-    Post refTo;
+    static belongsTo = [voter:User, refTo: Post]
     int value;
 
+
+    static mapping = {
+
+        refRo  cascade: "all-delete-orphan"
+    }
 
     static constraints = {
 

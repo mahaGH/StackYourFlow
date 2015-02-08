@@ -24,27 +24,31 @@
 
 
 
+
+
 		</g:isLogged>
 		<div class="nav" role="navigation">
 			<ul>
-				<li><g:link controller="question"> Questions</g:link></li>
-				<li><g:link controller="tag"> Tags</g:link></li>
-				<li><g:link controller="user"> Users</g:link></li>
-				<li><g:link controller="question" action="unanswered"> Unanswered</g:link></li>
+				<li><g:link controller="question"> ${message(code: 'default.main.menu.button.questions')}</g:link></li>
+				<li><g:link controller="tag"> ${message(code: 'default.main.menu.button.tags')}</g:link></li>
+				<li><g:link controller="user"> ${message(code: 'default.main.menu.button.users')}</g:link></li>
+				<li><g:link controller="question" action="unanswered"> ${message(code: 'default.main.menu.button.unanswered')}</g:link></li>
+				<li><g:link controller="badge" action="index">${message(code: 'default.main.menu.button.badge', default: 'Score')}</g:link></li>
 
 				<sec:ifAllGranted roles="ROLE_ADMIN">
-				<li><g:link controller="tag" action="create">New Tag</g:link></li>
+				<li><g:link controller="tag" action="create">${message(code: 'default.main.menu.button.new.Tag')}</g:link></li>
+				<li><g:link controller="badge" action="create">${message(code: 'default.main.menu.button.new.Badge')}</g:link></li>
 				</sec:ifAllGranted>
 				<g:isLogged>
-					<li><g:link controller="question" action="create"> Ask Question</g:link></li>
+					<li><g:link controller="question" action="create">${message(code: 'default.main.menu.button.ask.question')}</g:link></li>
 
 					<!--<li><a class="home" href="${createLink(uri: '/question')}"><g:message code="default.home.label"/></a></li>-->
-					<li><g:link controller="logout"> <g:message code="springSecurity.logout.title" /></g:link></li>
+					<li><g:link controller="logout"> <g:message code="${message(code: 'default.main.menu.button.logout')}" /></g:link></li>
 
 
 				</g:isLogged>
 				<g:isNotLogged>
-					<li><g:link controller="login"> LogIn</g:link></li>
+					<li><g:link controller="login">  <g:message code="${message(code: 'default.main.menu.button.login')}" /></g:link></li>
 				</g:isNotLogged>
 
 

@@ -15,9 +15,11 @@ class QuestionController {
     //la question qui est affichée
     Question question;
 
+    // le post qui se rattache au commentaire courrant
     Post post;
 
-
+    // éviter la mort des chatons
+    def questionService
 
 
     def index(Integer max) {
@@ -29,18 +31,19 @@ class QuestionController {
         params.max = Math.min(max ?: 10, 100)
         respond Question.findAllByResolvedNotEqual(true), model: [questionInstanceCount: Question.count()]
 
-
-
     }
 
     def show(Question questionInstance) {
+
+        //create
         Answer ans = new Answer();
+
+        //pour ajax
         question = questionInstance;
-        User currentUser = springSecurityService.currentUser
         post = null;
-        //question.user = springSecurityService.currentUser
+
         respond questionInstance,[answerInstance: ans]
-        //respond currentUser
+
     }
 
     def resolve(Answer ans) {
@@ -71,21 +74,8 @@ class QuestionController {
 
     def votePlus(Post postInstance)
     {
-        User user = springSecurityService.currentUser
-        postInstance._score++;
+        questionService.votePlus(postInstance)
 
-        Vote vote = new Vote();
-        vote.refTo = postInstance;
-        vote.value=1;
-        vote.voter=user;
-
-        if (postInstance.user.votes == null)
-            postInstance.user.votes = new ArrayList<>();
-
-        postInstance.user.votes.add(vote);
-        postInstance.user.score++;
-        postInstance.user.save();
-        postInstance.save flush:true
 
         request.withFormat {
             form multipartForm {
@@ -97,21 +87,7 @@ class QuestionController {
 
     def voteMinus(Post postInstance)
     {
-        User user = springSecurityService.currentUser
-        postInstance._score--;
-
-        Vote vote = new Vote();
-        vote.refTo = postInstance;
-        vote.value=-1;
-        vote.voter=user;
-
-        if (postInstance.user.votes == null)
-            postInstance.user.votes = new ArrayList<>();
-
-        postInstance.user.votes.add(vote);
-        postInstance.user.score--;
-        postInstance.user.save();
-        postInstance.save flush:true
+        questionService.voteMinus(postInstance)
 
         request.withFormat {
             form multipartForm {
@@ -134,43 +110,23 @@ class QuestionController {
             return
         }
 
-        commentInstance.user = springSecurityService.currentUser
-       // log.info commentInstance.user.toString()
-       // log.info springSecurityService.currentUser.toString()
-        if (post != null)
-        {
-            commentInstance.refTo = post
-            post = null;
+        questionService.saveComment(commentInstance, post)
+        post = null;
 
-
-
-            if (commentInstance.refTo.comments == null)
-                commentInstance.refTo.comments = new ArrayList<>();
-
-            commentInstance.refTo.refresh()
-            commentInstance.refTo.comments.add(commentInstance)
+        request.withFormat {
+        form multipartForm {
+            flash.message = message(code: 'default.created.message', args: [message(code: 'comment.label', default: 'Comment'), commentInstance.id])
+            redirect commentInstance.refTo.Redirect()
         }
-
-
-        commentInstance.save flush: true
-
-
-
-
-            request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'comment.label', default: 'Comment'), commentInstance.id])
-                redirect commentInstance.refTo.Redirect()
-            }
-            '*' { respond commentInstance, [status: CREATED] }
-             }
+        '*' { respond commentInstance, [status: CREATED] }
+         }
 
 
     }
 
+    // ajax
     def leaveAComment(Post postInstance) {
-        //params = ${postInstance.id}
-        //comment.refTo = postInstance;
+
         Comment comment = new Comment();
 
         if (post == null)
@@ -191,35 +147,13 @@ class QuestionController {
 
     }
 
+    //ajax
     def annulerComment(Post postInstance)
     {
         post = null;
         render(template: 'templateLeaveACommentView', model: [answer: postInstance])
     }
 
-
-
-    @Transactional
-    def deleteAnswer(Answer answerInstance) {
-
-        if (answerInstance == null) {
-            notFound()
-            return
-        }
-
-        Question q = answerInstance.question;
-        answerInstance.delete flush: true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Answer.label', default: 'Answer'), answerInstance.id])
-                redirect q
-            }
-            '*' { render status: NO_CONTENT }
-        }
-    }
-
-    def springSecurityService
 
     @Transactional
     def saveAnswer(Answer answerInstance)
@@ -235,20 +169,7 @@ class QuestionController {
             }
 
 
-            answerInstance.user = springSecurityService.currentUser
-            log.info(springSecurityService.currentUser.toString())
-
-           // answerInstance.question = questionInstance;
-            answerInstance.question = question;
-            answerInstance._creationDate = new Date();
-            if (answerInstance.question.answers == null ) answerInstance.question.answers = new ArrayList<Answer>();
-
-
-            answerInstance.question.answers.add(answerInstance);
-
-
-            //answerInstance.save();
-            answerInstance.save flush: true
+           questionService.saveAnswer(answerInstance,question)
 
 
             request.withFormat {
@@ -281,11 +202,7 @@ class QuestionController {
             return
         }
 
-        questionInstance._score = 0
-        questionInstance.answers = new ArrayList<Answer>()
-        questionInstance._creationDate = new Date()
-        questionInstance.user = springSecurityService.currentUser
-        questionInstance.save flush: true
+        questionService.save(questionInstance)
 
         request.withFormat {
             form multipartForm {
@@ -312,8 +229,7 @@ class QuestionController {
                 return
             }
 
-            answerInstance.question = question;
-            answerInstance.save flush: true
+            questionService.updateAnswer(aswerInstance,question)
 
             request.withFormat {
                 form multipartForm {
@@ -335,9 +251,6 @@ class QuestionController {
             respond questionInstance.errors, view: 'edit'
             return
         }
-
-
-
 
         questionInstance.save flush: true
 
