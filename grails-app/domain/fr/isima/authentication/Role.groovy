@@ -1,5 +1,8 @@
 package fr.isima.authentication
 
+/*
+Class which represents the role
+ */
 class Role {
 
 	String authority

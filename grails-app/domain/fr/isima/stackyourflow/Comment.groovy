@@ -1,7 +1,9 @@
 package fr.isima.stackyourflow
 
 /**
- * Created by ghayouba on 14/01/2015.
+ * Created by rouxel on 14/01/2015.
+ * Class of Comment = a text linked to an User (the person who has written the Comment)
+ *      and the Post the user want to comment
  */
 class Comment extends Message {
 

@@ -21,11 +21,10 @@ class Message {
 
     def whoIsMyController()
     {
-        return "message"
+        return "message    "
     }
 
     def whoIsMyMaster()
     {
-        return user.id
-    }
+          }
 }

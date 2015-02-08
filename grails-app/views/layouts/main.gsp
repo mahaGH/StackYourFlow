@@ -16,58 +16,75 @@
 		<asset:javascript src="application.js"/>
 		<g:layoutHead/>
 	</head>
-	<body>
-		<div class="Banner" role="banner"><asset:image src="renard.jpg"/>Stack Your Flow</div>
-
-	<div class="btn-group">
-		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-			Language <span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu" role="menu">
-			<li><g:link url="/StackYourFlow?lang=en">en</g:link></li>
-			<li><g:link url="/StackYourFlow?lang=fr">fr</g:link></li>
-		</ul>
+		<div class="User">
+			<div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+					Language <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li><g:link url="/StackYourFlow?lang=en">en</g:link></li>
+					<li><g:link url="/StackYourFlow?lang=fr">fr</g:link></li>
+				</ul>
+			</div>
+<g:isLogged>
+	<g:currentUser/>
+		<div class="Logout">
+			<g:link controller="logout"> <g:message code="springSecurity.logout.title" />
+			</g:link>
+		</div>
+	</g:isLogged>
 	</div>
+		<div class="Banner" role="banner"><asset:image src="renard.jpg"/>
 
-		<g:isLogged>
-			<g:currentUser/>
+	<div class="BannerButtons">
+			<div class="nav" role="navigation">
 
+					<li><g:link controller="question"> ${message(code: 'default.main.menu.button.questions')}</g:link></li>
 
-
-
-
-		</g:isLogged>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><g:link controller="question"> ${message(code: 'default.main.menu.button.questions')}</g:link></li>
-				<li><g:link controller="tag"> ${message(code: 'default.main.menu.button.tags')}</g:link></li>
-				<li><g:link controller="user"> ${message(code: 'default.main.menu.button.users')}</g:link></li>
-				<li><g:link controller="question" action="unanswered"> ${message(code: 'default.main.menu.button.unanswered')}</g:link></li>
+			</div>
+			<div class="nav" role="navigation">
+						<li><g:link controller="tag"> ${message(code: 'default.main.menu.button.tags')}</g:link></li>
+				</div>
+			<div class="nav" role="navigation">
+							<li><g:link controller="user"> ${message(code: 'default.main.menu.button.users')}</g:link></li>
+			</div>
+			<div class="nav" role="navigation">
+								<li><g:link controller="question" action="unanswered"> ${message(code: 'default.main.menu.button.unanswered')}</g:link></li>
+			</div>
+			<div class="nav" role="navigation">
 				<li><g:link controller="badge" action="index">${message(code: 'default.main.menu.button.badge', default: 'Score')}</g:link></li>
+			</div>
+<g:isLogged>
+	<div class="nav" role="navigation">
+		<li><g:link controller="question" action="create">${message(code: 'default.main.menu.button.ask.question')}</g:link></li>
+	</div>
+	</g:isLogged>
 
-				<sec:ifAllGranted roles="ROLE_ADMIN">
-				<li><g:link controller="tag" action="create">${message(code: 'default.main.menu.button.new.Tag')}</g:link></li>
+		</div>
+			<div class="BannerButtons">
+			<sec:ifAllGranted roles="ROLE_ADMIN">
+                <div class="nav" role="navigation">
+                <li><g:link controller="tag" action="create">${message(code: 'default.main.menu.button.new.Tag')}</g:link></li>
+				</div>
+				<div class="nav" role="navigation">
 				<li><g:link controller="badge" action="create">${message(code: 'default.main.menu.button.new.Badge')}</g:link></li>
-				</sec:ifAllGranted>
-				<g:isLogged>
-					<li><g:link controller="question" action="create">${message(code: 'default.main.menu.button.ask.question')}</g:link></li>
-
-					<!--<li><a class="home" href="${createLink(uri: '/question')}"><g:message code="default.home.label"/></a></li>-->
-					<li><g:link controller="logout"> <g:message code="${message(code: 'default.main.menu.button.logout')}" /></g:link></li>
-
-
-				</g:isLogged>
+				</div>
+			</sec:ifAllGranted>
 				<g:isNotLogged>
-					<li><g:link controller="login">  <g:message code="${message(code: 'default.main.menu.button.login')}" /></g:link></li>
-				</g:isNotLogged>
+				<div class="Login" role="navigation">
+					<g:link controller="login">  <g:message code="${message(code: 'default.main.menu.button.login')}" /></g:link>
+				</div>
+				</g:isNotLogged></div>
+					<g:isLogged>
+						<div class="Login" role="navigation">
+							<g:link controller="logout"> <g:message code="${message(code: 'default.main.menu.button.logout')}" /></g:link>
+						</div>
 
+					</g:isLogged>
 
-
-
-			</ul>
 		</div>
 	<g:layoutBody/>
-		<div class="footer" role="contentinfo"></div>
-		<div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
+
+
 	</body>
 </html>

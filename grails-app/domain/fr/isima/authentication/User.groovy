@@ -4,25 +4,28 @@ import fr.isima.stackyourflow.Badge
 import fr.isima.stackyourflow.Message
 import fr.isima.stackyourflow.Post
 import fr.isima.stackyourflow.Vote
-
-
-
+/*
+Class which represents an User account
+ */
 class User {
 
 	transient springSecurityService
-
+	//all the account informations neccesary
 	String username
 	String password
 	String email
 	int score
+	//caracteristics of the account
 	boolean enabled = true
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired
+	//Personal informations
 	String nom
 	String prenom
 	String adresse
 	Date birth
+	//caracteristics of the profile image
 	byte[] img
 	String avatarType
 
@@ -32,6 +35,7 @@ class User {
 
 	static transients = ['springSecurityService']
 
+	//constraints of attributes
 	static constraints = {
 		votes nullable: true
 		username blank: false, unique: true
@@ -63,10 +67,11 @@ class User {
 			encodePassword()
 		}
 	}
-
+	//incrementation of the score of the voted Post
 	def votePlus(Post postInstance){
 		postInstance._score++;
 	}
+	//incrementation of the score of the downvoted Post
 	def voteMinus(Post postInstance){
 		postInstance._score--;
 	}

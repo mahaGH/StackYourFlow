@@ -1,6 +1,9 @@
 package fr.isima.authentication
 
 import org.apache.commons.lang.builder.HashCodeBuilder
+/*
+Class which links the User class and the Role Class
+ */
 
 class UserRole implements Serializable {
 
@@ -9,6 +12,7 @@ class UserRole implements Serializable {
 	User user
 	Role role
 
+	// test of equality of two UserRole
 	boolean equals(other) {
 		if (!(other instanceof UserRole)) {
 			return false
@@ -24,27 +28,27 @@ class UserRole implements Serializable {
 		if (role) builder.append(role.id)
 		builder.toHashCode()
 	}
-
+	//find the UserRole corresponding to an User(userId) and a Role(roleId)
 	static UserRole get(long userId, long roleId) {
 		UserRole.where {
 			user == User.load(userId) &&
 			role == Role.load(roleId)
 		}.get()
 	}
-
+	//test if an UserRole corresponding to an User(userId) and a Role(roleId) exists
 	static boolean exists(long userId, long roleId) {
 		UserRole.where {
 			user == User.load(userId) &&
 			role == Role.load(roleId)
 		}.count() > 0
 	}
-
+	//creation of an UserRole
 	static UserRole create(User user, Role role, boolean flush = false) {
 		def instance = new UserRole(user: user, role: role)
 		instance.save(flush: flush, insert: true)
 		instance
 	}
-
+	//suppression of an UserRole
 	static boolean remove(User u, Role r, boolean flush = false) {
 		if (u == null || r == null) return false
 
@@ -57,7 +61,7 @@ class UserRole implements Serializable {
 
 		rowCount > 0
 	}
-
+	//suppression of all the UserRoles which has an User u as attribute
 	static void removeAll(User u, boolean flush = false) {
 		if (u == null) return
 
@@ -68,6 +72,7 @@ class UserRole implements Serializable {
 		if (flush) { UserRole.withSession { it.flush() } }
 	}
 
+	//suppression of all the UserRoles which has a Role r as attribute
 	static void removeAll(Role r, boolean flush = false) {
 		if (r == null) return
 

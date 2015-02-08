@@ -1,7 +1,7 @@
 package fr.isima.stackyourflow
 
 /**
- * Created by ghayouba on 14/01/2015.
+ * Created by rouxel on 14/01/2015.
  */
 class Answer extends Post{
 
