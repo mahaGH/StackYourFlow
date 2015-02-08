@@ -38,15 +38,20 @@ class RegisterController extends AbstractS2UiController {
 		def copy = [:] + (flash.chainedParams ?: [:])
 		copy.remove 'controller'
 		copy.remove 'action'
-		[command: new RegisterCommand(copy)]
+		def v = new RegisterCommand(copy)
+		log.info("register : " + v)
+		[command: v ]
 	}
 
 	def register(RegisterCommand command) {
 
 		if (command.hasErrors()) {
+			log.info("register failed : " + command)
 			render view: 'index', model: [command: command]
 			return
 		}
+
+		log.info("register : " + command)
 
 		String salt = saltSource instanceof NullSaltSource ? null : command.username
 		def user = lookupUserClass().newInstance(email: command.email, username: command.username,
@@ -60,17 +65,25 @@ class RegisterController extends AbstractS2UiController {
 		RegistrationCode registrationCode = springSecurityUiService.register(user, command.password, salt)
 		if (registrationCode == null || registrationCode.hasErrors()) {
 			// null means problem creating the user
+			log.info("problem creating the user")
 			flash.error = message(code: 'spring.security.ui.register.miscError')
 			flash.chainedParams = params
 			redirect action: 'index'
 			return
 		}
-/*
+
+
+
 		String url = generateLink('verifyRegistration', [t: registrationCode.token])
 
+
 		def conf = SpringSecurityUtils.securityConfig
-		def body = conf.ui.register.emailBody
-		if (body.contains('$')) {
+		//def body = conf.ui.register.emailBody
+
+
+
+
+		/*if (body.contains('$')) {
 			body = evaluate(body, [user: user, url: url])
 		}
 		mailService.sendMail {
@@ -78,10 +91,37 @@ class RegisterController extends AbstractS2UiController {
 			from conf.ui.register.emailFrom
 			subject conf.ui.register.emailSubject
 			html body.toString()
-		}
-		*/
+		}*/
 
-		render view: 'question'
+		def user2
+		// TODO to ui service
+		RegistrationCode.withTransaction { status ->
+			String usernameFieldName = SpringSecurityUtils.securityConfig.userLookup.usernamePropertyName
+			user2 = lookupUserClass().findWhere((usernameFieldName): registrationCode.username)
+			if (!user2) {
+				return
+			}
+			user2.accountLocked = false
+			user2.save(flush:true)
+			def UserRole = lookupUserRoleClass()
+			def Role = lookupRoleClass()
+			for (roleName in conf.ui.register.defaultRoleNames) {
+				UserRole.create user, Role.findByAuthority(roleName)
+			}
+			registrationCode.delete()
+		}
+
+		if (!user2) {
+			flash.error = message(code: 'spring.security.ui.register.badCode')
+			redirect uri: defaultTargetUrl
+			return
+		}
+
+		springSecurityService.reauthenticate user2.username
+
+		flash.message = message(code: 'spring.security.ui.register.complete')
+		redirect uri: conf.ui.register.postRegisterUrl ?: defaultTargetUrl
+
 	}
 
 	def verifyRegistration() {

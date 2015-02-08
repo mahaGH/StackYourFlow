@@ -88,7 +88,8 @@ grails.hibernate.osiv.readonly = false
 grails.plugin.springsecurity.password.algorithm='bcrypt'
 
 //redirection after registration
-grails.plugin.springsecurity.ui.register.postRegisterUrl = 'question/index'
+grails.plugin.springsecurity.ui.register.postRegisterUrl = '/'
+grails.plugin.springsecurity.successHandler.defaultTargetUrl = '/'
 
 // parameters of registration mail
 grails.plugin.springsecurity.ui.register.emailBody = 'Thank you for you registration; We hope you will love our site.'
