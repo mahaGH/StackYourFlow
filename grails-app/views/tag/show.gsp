@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'tag.label', default: 'Tag')}" />
+		<g:set var="entityName" value="${message(code: 'default.show.tag', default: 'Tag')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
 	</head>
 	<body>
@@ -18,7 +18,7 @@
 			
 				<g:if test="${tagInstance?._title}">
 				<li class="fieldcontain">
-					<span id="_title-label" class="property-label"><g:message code="tag._title.label" default="Title" /></span>
+					<span id="_title-label" class="property-label"><g:message code="default.question.attrs._title" default="Title" /></span>
 					
 						<span class="property-value" aria-labelledby="_title-label"><g:fieldValue bean="${tagInstance}" field="_title"/></span>
 					
@@ -34,12 +34,12 @@
 						<thead>
 						<tr>
 
-							<th><g:message code="question._title.label" default="Title" /></th>
+							<th><g:message code="default.question.attrs._title" default="Title" /></th>
 
-							<g:sortableColumn property="_score" title="${message(code: 'question._score.label', default: 'Score')}" />
+							<g:sortableColumn property="_score" title="${message(code: 'default.question.attrs.score', default: 'Score')}" />
 
 
-							<g:sortableColumn property="user" title="${message(code: 'question.user.label', default: 'User')}" />
+							<g:sortableColumn property="user" title="${message(code: 'default.question.attrs.user', default: 'User')}" />
 
 
 

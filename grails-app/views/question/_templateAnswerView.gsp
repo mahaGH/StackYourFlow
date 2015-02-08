@@ -3,8 +3,9 @@
 <div class="panel panel-default" id="ans_panel${answer.id}">
 
 	<div class="panel-heading">
+		${message(code: 'default.head.answer' )}&nbsp;<g:link controller="user" action="show" id="${answer?.user?.id}">${answer?.user?.username}</g:link>
+		${message(code: 'default.head.answer2' , args: [answer?._creationDate])}
 
-		Answered by <g:link controller="user" action="show" id="${answer?.user?.id}">${answer?.user?.username}</g:link> on ${answer?._creationDate}
 	</div>
 
 
@@ -21,18 +22,8 @@
 
 
 
-		<g:if test="${answer?._score}">
-
-			<span id="_score-label" class="property-label"><g:message code="a._score.label" default="Score" /></span>
-
-			<span class="property-value" aria-labelledby="_score-label"><g:fieldValue bean="${answer}" field="_score"/></span>
-			<br>
-		</g:if>
-
-
 		<g:if test="${answer?._text}">
 
-			<span id="_text-answer-label" class="property-label"><g:message code="a._text.label" default="Text" /></span>
 
 			<span class="property-value" aria-labelledby="_text-label"><g:fieldValue bean="${answer}" field="_text"/></span>
 
@@ -66,7 +57,7 @@
 						<g:isOwner owner="${answer.question.user}">
 
 							<g:if test="${! answer.question.resolved}">
-								<li><g:actionSubmit action="resolve" value="resolve" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></li>
+								<li><g:actionSubmit action="resolve" value="${message(code: 'default.button.resolve.label')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></li>
 							</g:if>
 						</g:isOwner>
 					</g:form>

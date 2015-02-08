@@ -19,6 +19,16 @@
 	<body>
 		<div class="Banner" role="banner"><asset:image src="renard.jpg"/>Stack Your Flow</div>
 
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			Language <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><g:link url="/StackYourFlow?lang=en">en</g:link></li>
+			<li><g:link url="/StackYourFlow?lang=fr">fr</g:link></li>
+		</ul>
+	</div>
+
 		<g:isLogged>
 			<g:currentUser/>
 

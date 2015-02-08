@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'badge.label', default: 'Badge')}" />
+		<g:set var="entityName" value="${message(code: 'default.badge.attrs.badge', default: 'Badge')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
 	</head>
 	<body>
@@ -19,7 +19,7 @@
 			
 				<g:if test="${badgeInstance?._name}">
 				<li class="fieldcontain">
-					<span id="_name-label" class="property-label"><g:message code="badge._name.label" default="Name" /></span>
+					<span id="_name-label" class="property-label"><g:message code="default.badge.attrs.nom" default="Name" /></span>
 					
 						<span class="property-value" aria-labelledby="_name-label"><g:fieldValue bean="${badgeInstance}" field="_name"/></span>
 					
@@ -28,7 +28,7 @@
 			
 				<g:if test="${badgeInstance?._objective}">
 				<li class="fieldcontain">
-					<span id="_objective-label" class="property-label"><g:message code="badge._objective.label" default="Objective" /></span>
+					<span id="_objective-label" class="property-label"><g:message code="default.badge.attrs.objective" default="Objective" /></span>
 					
 						<span class="property-value" aria-labelledby="_objective-label"><g:fieldValue bean="${badgeInstance}" field="_objective"/></span>
 					
@@ -43,14 +43,14 @@
 					<thead>
 					<tr>
 
-						<g:sortableColumn property="username" title="${message(code: 'user.username.label', default: 'Username')}" />
+						<g:sortableColumn property="username" title="${message(code: 'default.utilisateur.attrs.username', default: 'Username')}" />
 
 
 
-							<g:sortableColumn property="nom" title="${message(code: 'user.nom.label', default: 'Nom')}" />
+							<g:sortableColumn property="nom" title="${message(code: 'default.utilisateur.attrs.nom', default: 'Nom')}" />
 
-							<g:sortableColumn property="prenom" title="${message(code: 'user.prenom.label', default: 'Prenom')}" />
-							<g:sortableColumn property="score" title="${message(code: 'user.score.label', default: 'Score')}" />
+							<g:sortableColumn property="prenom" title="${message(code: 'default.utilisateur.attrs.prenom', default: 'Prenom')}" />
+							<g:sortableColumn property="score" title="${message(code: 'default.question.attrs.score', default: 'Score')}" />
 
 
 
@@ -63,7 +63,7 @@
 
 							<td>
 
-									<g:link action="show" id="${userInstance.id}">${fieldValue(bean: userInstance, field: "username")}</g:link>
+									<g:link controller="user" action="show" id="${userInstance.id}">${fieldValue(bean: userInstance, field: "username")}</g:link>
 
 							</td>
 

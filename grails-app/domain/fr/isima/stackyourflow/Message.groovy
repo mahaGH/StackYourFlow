@@ -18,4 +18,14 @@ class Message {
         user nullable : true
 
     }
+
+    def whoIsMyController()
+    {
+        return "message"
+    }
+
+    def whoIsMyMaster()
+    {
+        return user.id
+    }
 }

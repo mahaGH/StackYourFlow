@@ -26,6 +26,18 @@ class Question extends Post {
         resolved = true;
     }
 
+    @Override
+    def whoIsMyController()
+    {
+        return "question"
+    }
+
+    @Override
+    def whoIsMyMaster()
+    {
+        return this.id
+    }
+
     static mapping = {
         answers sort: '_score' , order: 'desc'
     }

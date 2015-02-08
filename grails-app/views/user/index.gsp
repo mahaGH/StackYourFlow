@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'user.label', default: 'User')}" />
+		<g:set var="entityName" value="${message(code: 'default.main.menu.button.users')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 	</head>
 	<body>
@@ -19,27 +19,27 @@
 			<thead>
 					<tr>
 					
-						<g:sortableColumn property="username" title="${message(code: 'user.username.label', default: 'Username')}" />
+						<g:sortableColumn property="username" title="${message(code: 'default.utilisateur.attrs.username', default: 'Username')}" />
 
 						<sec:ifAllGranted roles="ROLE_ADMIN">
-						<g:sortableColumn property="password" title="${message(code: 'user.password.label', default: 'Password')}" />
+						<g:sortableColumn property="password" title="${message(code: 'default.utilisateur.attrs.password', default: 'Password')}" />
 					
-						<g:sortableColumn property="accountExpired" title="${message(code: 'user.accountExpired.label', default: 'Account Expired')}" />
+						<g:sortableColumn property="accountExpired" title="${message(code: 'default.utilisateur.attrs.accountExpire', default: 'Account Expired')}" />
 					
-						<g:sortableColumn property="accountLocked" title="${message(code: 'user.accountLocked.label', default: 'Account Locked')}" />
+						<g:sortableColumn property="accountLocked" title="${message(code: 'default.utilisateur.attrs.accountLock', default: 'Account Locked')}" />
 					
-						<g:sortableColumn property="enabled" title="${message(code: 'user.enabled.label', default: 'Enabled')}" />
+						<g:sortableColumn property="enabled" title="${message(code: 'default.utilisateur.attrs.enabled', default: 'Enabled')}" />
 					
-						<g:sortableColumn property="email" title="${message(code: 'user.mail.label', default: 'Mail')}" />
+						<g:sortableColumn property="email" title="${message(code: 'default.utilisateur.attrs.email', default: 'Mail')}" />
 
 						</sec:ifAllGranted>
 
 						<sec:ifNotGranted roles="ROLE_ADMIN">
 
-							<g:sortableColumn property="nom" title="${message(code: 'user.nom.label', default: 'Nom')}" />
+							<g:sortableColumn property="nom" title="${message(code: 'default.utilisateur.attrs.nom', default: 'Nom')}" />
 
-							<g:sortableColumn property="prenom" title="${message(code: 'user.prenom.label', default: 'Prenom')}" />
-							<g:sortableColumn property="score" title="${message(code: 'user.score.label', default: 'Score')}" />
+							<g:sortableColumn property="prenom" title="${message(code: 'default.utilisateur.attrs.prenom', default: 'Prenom')}" />
+							<g:sortableColumn property="score" title="${message(code: 'default.question.attrs.score', default: 'Score')}" />
 
 
 

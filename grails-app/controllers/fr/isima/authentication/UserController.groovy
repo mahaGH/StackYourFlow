@@ -1,5 +1,6 @@
 package fr.isima.authentication
 
+
 import grails.plugin.springsecurity.annotation.Secured
 
 import static org.springframework.http.HttpStatus.*
@@ -13,9 +14,11 @@ class UserController {
     private static final okcontents = ['image/png', 'image/jpeg', 'image/gif']
 
 
+
     def springSecurityService
 
     def getCurrent() {
+
         return springSecurityService.currentUser
     }
 
@@ -59,6 +62,7 @@ class UserController {
            respond userInstance.errors, view: 'create'
        }
         else {
+
            request.withFormat {
                form multipartForm {
                    flash.message = message(code: 'default.created.message', args: [message(code: 'user.label', default: 'User'), userInstance.id])

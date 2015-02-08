@@ -12,6 +12,18 @@ class Post extends Message{
         return new Question();
     }
 
+    @Override
+    def whoIsMyController()
+    {
+        return "post"
+    }
+
+    @Override
+    def whoIsMyMaster()
+    {
+        return this
+    }
+
     public void resolve() {
 
     }

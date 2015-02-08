@@ -3,15 +3,15 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'question.label', default: 'Question')}" />
-		<g:set var="answerEntity" value="${message(code: 'answer.label', default: 'Answer')}" />
+		<g:set var="entityName" value="${message(code: 'default.show.question', default: 'Question')}" />
+		<g:set var="answerEntity" value="${message(code: 'default.show.answer', default: 'Answer')}" />
 		<title><g:message code="default.show.label" args="[entityName]" /></title>
 	</head>
 	<body>
 		<a href="#show-question" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
 
 		<div id="show-question" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
+			<h1><g:message code="default.show.question.label" args="[entityName]" /></h1>
 			<g:if test="${flash.message}">
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
@@ -27,9 +27,6 @@
 	<g:isLogged>
 		<div id="create-answer" class="content scaffold-create" role="main">
 			<h1><g:message code="default.create.label" args="[answerEntity]" /></h1>
-			<g:if test="${flash.message}">
-				<div class="message" role="status">${flash.message}</div>
-			</g:if>
 			<g:hasErrors bean="${answerInstance}">
 				<ul class="errors" role="alert">
 					<g:eachError bean="${answerInstance}" var="error">

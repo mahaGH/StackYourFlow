@@ -28,6 +28,18 @@ class Answer extends Post{
         question.resolve();
     }
 
+    @Override
+    def whoIsMyController()
+    {
+        return "answer"
+    }
+
+    @Override
+    def whoIsMyMaster()
+    {
+        return question.id
+    }
+
     static constraints = {
 
         question nullable: true

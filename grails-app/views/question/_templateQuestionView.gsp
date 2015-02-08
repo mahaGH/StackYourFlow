@@ -2,20 +2,25 @@
 
 <div class="panel panel-default">
 
+	<div class="panel-heading">
+		${message(code: 'default.head.question' )}&nbsp;<g:link controller="user" action="show" id="${questionInstance?.user?.id}">${questionInstance?.user?.username}</g:link>
+		${message(code: 'default.head.question2' , args: [questionInstance?._creationDate])}
+	</div>
+
 	<div class="panel-body" id="question">
 
 		<g:if test="${questionInstance?.resolved}">
 			<asset:image src="valider.png"/>
 		</g:if>
-		<g:if test="${questionInstance?.user}">
-			<li class="fieldcontain">
-				<span id="user-label" class="property-label"><g:message code="question.user.label" default="User" /></span>
 
-				<span class="property-value" aria-labelledby="user-label"><g:link controller="user" action="show" id="${questionInstance?.user?.id}">${questionInstance?.user?.username}</g:link></span>
+		<g:if test="${questionInstance?._title}">
+			<li class="fieldcontain">
+
+				<span class="property-value" aria-labelledby="_title-label"><u><g:fieldValue bean="${questionInstance}" field="_title"/></u></span>
 
 			</li>
+			<br>
 		</g:if>
-
 		<g:if test="${questionInstance?._score}">
 			<li class="fieldcontain">
 				<span id="_score-label" class="property-label"><g:message code="question._score.label" default="Score" /></span>
@@ -27,31 +32,19 @@
 
 		<g:render template="/question/templateScoreView" model="[questionInstance:questionInstance]"></g:render>
 
-		<g:if test="${questionInstance?._title}">
-			<li class="fieldcontain">
-				<span id="_title-label" class="property-label"><g:message code="question._title.label" default="Title" /></span>
 
-				<span class="property-value" aria-labelledby="_title-label"><g:fieldValue bean="${questionInstance}" field="_title"/></span>
 
-			</li>
-		</g:if>
+
+
 		<g:if test="${questionInstance?._text}">
 			<li class="fieldcontain">
-				<span id="_text-label" class="property-label"><g:message code="question._text.label" default="Text" /></span>
 
 				<span class="property-value" aria-labelledby="_text-label"><g:fieldValue bean="${questionInstance}" field="_text"/></span>
 
 			</li>
+			<br>
 		</g:if>
 
-		<g:if test="${questionInstance?._creationDate}">
-			<li class="fieldcontain">
-				<span id="_creationDate-label" class="property-label"><g:message code="comment._creationDate.label" default="Creation Date" /></span>
-
-				<span class="property-value" aria-labelledby="_creationDate-label"><g:formatDate date="${questionInstance?._creationDate}" /></span>
-			</li>
-
-		</g:if>
 
 
 
@@ -101,7 +94,7 @@
 <g:if test="${questionInstance?.comments}">
 	<li class="fieldcontain">
 
-		<span id="comments-label" class="property-label"><g:message code="a.comments.label" default="Comments" /></span>
+		<span id="comments-label" class="property-label"><g:message code="default.question.attrs.Comments" default="Comments" /></span>
 		<br>
 		<g:render template="/question/templateCommentView" collection="${questionInstance?.comments}" var="comment"></g:render>
 
@@ -111,7 +104,7 @@
 
 		<g:if test="${questionInstance?.answers}">
 			<li class="fieldcontain">
-				<span id="answers-label" class="property-label"><g:message code="question.answers.label" default="${questionInstance.answers.size()} Answers" /></span>
+				<span id="answers-label" class="property-label"><g:message code="question.answers.label" args="${questionInstance.answers.size()}" /></span>
 				<br>
 				<g:render template="/question/templateAnswerView" collection="${questionInstance?.answers}" var="answer"></g:render>
 

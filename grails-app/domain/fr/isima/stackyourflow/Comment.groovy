@@ -9,4 +9,16 @@ class Comment extends Message {
     static constraints = {
         refTo nullable: true
     }
+
+    @Override
+    def whoIsMyController()
+    {
+        return "comment"
+    }
+
+    @Override
+    def whoIsMyMaster()
+    {
+        return refTo.whoIsMyMaster()
+    }
 }

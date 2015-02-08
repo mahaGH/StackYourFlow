@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'tag.label', default: 'Tag')}" />
+		<g:set var="entityName" value="${message(code: 'default.show.tags', default: 'Tag')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 	</head>
 	<body>
@@ -18,7 +18,7 @@
 			<thead>
 					<tr>
 					
-						<g:sortableColumn property="_title" title="${message(code: 'tag._title.label', default: 'Title')}" />
+						<g:sortableColumn property="_title" title="${message(code: 'default.question.attrs._title', default: 'Title')}" />
 					
 					</tr>
 				</thead>

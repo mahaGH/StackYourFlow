@@ -4,7 +4,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'badge.label', default: 'Badge')}" />
+		<g:set var="entityName" value="${message(code: 'default.badge.attrs.badges', default: 'Badge')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 	</head>
 	<body>
@@ -18,16 +18,16 @@
 			<table>
 			<thead>
 					<tr>
-						<g:sortableColumn property="image" title="image" />
+						<g:sortableColumn property="image" title="${message(code: 'default.badge.attrs.image', default: 'Image')}" />
 
 
-						<g:sortableColumn property="_name" title="${message(code: 'badge._name.label', default: 'Name')}" />
+						<g:sortableColumn property="_name" title="${message(code: 'default.badge.attrs.nom', default: 'Name')}" />
 					
-						<g:sortableColumn property="_objective" title="${message(code: 'badge._objective.label', default: 'Objective')}" />
+						<g:sortableColumn property="_objective" title="${message(code: 'default.badge.attrs.objective', default: 'Objective')}" />
 					
 
 						<g:isLogged>
-							<g:sortableColumn property="progress" title="Progress" />
+							<g:sortableColumn property="progress" title="${message(code: 'default.badge.attrs.progress', default: 'Progress')}" />
 
 						</g:isLogged>
 					

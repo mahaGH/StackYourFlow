@@ -1,6 +1,7 @@
 package fr.isima.authentication
 
 import fr.isima.stackyourflow.Badge
+import fr.isima.stackyourflow.Message
 import fr.isima.stackyourflow.Post
 import fr.isima.stackyourflow.Vote
 
@@ -27,7 +28,7 @@ class User {
 
 
 	// votes for user's posts
-	static hasMany = [votes:Vote,badges:Badge]
+	static hasMany = [votes:Vote,badges:Badge,posts:Message]
 
 	static transients = ['springSecurityService']
 
