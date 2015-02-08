@@ -40,6 +40,7 @@ class TagController {
         }
 
         tagInstance.save flush: true
+        log.info("New tag saved")
 
         request.withFormat {
             form multipartForm {
@@ -55,6 +56,7 @@ class TagController {
     }
 
     @Transactional
+    @Secured(['ROLE_ADMIN'])
     def update(Tag tagInstance) {
         if (tagInstance == null) {
             notFound()
@@ -67,6 +69,7 @@ class TagController {
         }
 
         tagInstance.save flush: true
+        log.info("New tag edited")
 
         request.withFormat {
             form multipartForm {
@@ -78,6 +81,7 @@ class TagController {
     }
 
     @Transactional
+    @Secured(['ROLE_ADMIN'])
     def delete(Tag tagInstance) {
 
         if (tagInstance == null) {
@@ -86,6 +90,7 @@ class TagController {
         }
 
         tagInstance.delete flush: true
+        log.info("Tag deleted")
 
         request.withFormat {
             form multipartForm {
@@ -97,6 +102,7 @@ class TagController {
     }
 
     protected void notFound() {
+        log.info("not Found")
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'tag.label', default: 'Tag'), params.id])

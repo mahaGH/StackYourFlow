@@ -91,6 +91,7 @@ class AnswerController {
         }
 
         answerInstance.delete flush: true
+        log.info("answer delete: " + answerInstance.id)
 
         request.withFormat {
             form multipartForm {

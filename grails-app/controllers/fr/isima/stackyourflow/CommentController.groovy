@@ -17,10 +17,12 @@ class CommentController {
     }
 
     def show(Comment commentInstance) {
+        log.info("Showing comment " + commentInstance.id)
         respond commentInstance
     }
 
     def create() {
+        log.info("creating new comment")
         respond new Comment(params)
     }
 
@@ -40,6 +42,7 @@ class CommentController {
 
         commentInstance.user = springSecurityService.currentUser
         commentInstance.save flush: true
+        log.info(" comment saved:" + commentInstance.id)
 
         request.withFormat {
             form multipartForm {
@@ -51,6 +54,7 @@ class CommentController {
     }
 
     def edit(Comment commentInstance) {
+        log.info("editing comment " + commentInstance.id)
         respond commentInstance
     }
 
@@ -67,6 +71,7 @@ class CommentController {
         }
 
         commentInstance.save flush: true
+        log.info("updating comment " + commentInstance.id)
 
         request.withFormat {
             form multipartForm {
@@ -85,6 +90,7 @@ class CommentController {
             return
         }
 
+        log.info("delteing comment " + commentInstance.id)
         commentInstance.delete flush: true
 
         request.withFormat {
@@ -97,6 +103,7 @@ class CommentController {
     }
 
     protected void notFound() {
+        log.info("Not found")
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'comment.label', default: 'Comment'), params.id])

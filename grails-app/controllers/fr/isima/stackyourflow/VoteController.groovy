@@ -17,11 +17,13 @@ class VoteController {
     }
 
     def show(Vote voteInstance) {
+        log.info("showing vote " + voteInstance.id )
         respond voteInstance
     }
 
     def create() {
         respond new Vote(params)
+        log.info("a new vote is create")
     }
 
     @Transactional
@@ -37,6 +39,7 @@ class VoteController {
         }
 
         voteInstance.save flush: true
+        log.info("vote saved")
 
         request.withFormat {
             form multipartForm {
@@ -49,6 +52,7 @@ class VoteController {
 
     def edit(Vote voteInstance) {
         respond voteInstance
+        log.info("editing vote " + voteInstance.id )
     }
 
     @Transactional
@@ -64,6 +68,7 @@ class VoteController {
         }
 
         voteInstance.save flush: true
+        log.info("vote saved:" + voteInstance.id)
 
         request.withFormat {
             form multipartForm {
@@ -82,7 +87,9 @@ class VoteController {
             return
         }
 
+        log.info("vote" + voteInstance.id + " deleted")
         voteInstance.delete flush: true
+
 
         request.withFormat {
             form multipartForm {
@@ -94,6 +101,8 @@ class VoteController {
     }
 
     protected void notFound() {
+
+        log.info("not found")
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'vote.label', default: 'Vote'), params.id])

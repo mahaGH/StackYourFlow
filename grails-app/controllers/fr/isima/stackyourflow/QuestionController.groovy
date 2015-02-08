@@ -24,17 +24,20 @@ class QuestionController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+        log.info("go to question index")
         respond Question.list(params), model: [questionInstanceCount: Question.count()]
     }
 
     def unanswered(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+        log.info("go to unanswered index")
         respond Question.findAllByResolvedNotEqual(true), model: [questionInstanceCount: Question.count()]
 
     }
 
     def show(Question questionInstance) {
 
+        log.info("go to showing question " + questionInstance.id)
         //create
         Answer ans = new Answer();
 
@@ -47,6 +50,9 @@ class QuestionController {
     }
 
     def resolve(Answer ans) {
+
+        log.info("question resolved")
+
         ans.resolve();
         ans.save flush: true
 
@@ -64,18 +70,21 @@ class QuestionController {
     def editMode(Answer answerInstance) {
 
         render(template:'templateAnswerEditView', model: [answer: answerInstance])
+        log.info("Editing ... Answer")
 
     }
 
     def editComment(Comment commentInstance)
     {
         render(template: 'templateCommentEditView',model: [comment:commentInstance])
+        log.info("Editing ... Comment")
     }
 
     def votePlus(Post postInstance)
     {
         questionService.votePlus(postInstance)
 
+        log.info("Vote plus for " + postInstance.user.username)
 
         request.withFormat {
             form multipartForm {
@@ -88,6 +97,8 @@ class QuestionController {
     def voteMinus(Post postInstance)
     {
         questionService.voteMinus(postInstance)
+
+        log.info("Vote minus for " + postInstance.user.username)
 
         request.withFormat {
             form multipartForm {
@@ -111,7 +122,11 @@ class QuestionController {
         }
 
         questionService.saveComment(commentInstance, post)
+        log.info("Comment Save")
+
         post = null;
+        log.info("A new comment can be open")
+
 
         request.withFormat {
         form multipartForm {
@@ -129,18 +144,21 @@ class QuestionController {
 
         Comment comment = new Comment();
 
+
         if (post == null)
         {
             post = postInstance
+            log.info("A new comment is opened")
             // respond commentInstance:comment
             render template: "templateCommentCreate",model: [commentInstance:comment]
             render template: "templateCancelLeaveACommentView", model:[answer: postInstance]
         };
         else
         {
-
+            log.info("A comment is already opened")
             render template: 'templateLeaveACommentView', model: [answer: postInstance]
-            render text:"<br>un seul commentaire peut être crée à la fois\n"
+            render text:"<br>"
+            render text: message(code:'default.comment.cancel' ,default: "<br>un seul commentaire peut être crée à la fois\n" )
 
         }
 
@@ -151,6 +169,7 @@ class QuestionController {
     def annulerComment(Post postInstance)
     {
         post = null;
+        log.info("A new comment can be opened")
         render(template: 'templateLeaveACommentView', model: [answer: postInstance])
     }
 
@@ -169,8 +188,8 @@ class QuestionController {
             }
 
 
-           questionService.saveAnswer(answerInstance,question)
-
+            questionService.saveAnswer(answerInstance,question)
+            log.info("answer saved")
 
             request.withFormat {
                 form multipartForm {
@@ -183,6 +202,7 @@ class QuestionController {
 
     def create() {
         respond new Question(params)
+        log.info("question init")
     }
 
 
@@ -203,6 +223,7 @@ class QuestionController {
         }
 
         questionService.save(questionInstance)
+        log.info("question saved")
 
         request.withFormat {
             form multipartForm {
@@ -230,6 +251,7 @@ class QuestionController {
             }
 
             questionService.updateAnswer(aswerInstance,question)
+            log.info("answer edited")
 
             request.withFormat {
                 form multipartForm {
@@ -253,6 +275,7 @@ class QuestionController {
         }
 
         questionInstance.save flush: true
+        log.info("question edited")
 
         request.withFormat {
             form multipartForm {
@@ -272,6 +295,7 @@ class QuestionController {
         }
 
         questionInstance.delete flush: true
+        log.info("question deleted")
 
         request.withFormat {
             form multipartForm {
@@ -283,6 +307,7 @@ class QuestionController {
     }
 
     protected void notFound() {
+        log.info("not found")
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'question.label', default: 'Question'), params.id])

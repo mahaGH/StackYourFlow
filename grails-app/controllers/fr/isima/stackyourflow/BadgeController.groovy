@@ -13,14 +13,17 @@ class BadgeController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+        log.info("go to badge index")
         respond Badge.list(params), model: [badgeInstanceCount: Badge.count()]
     }
 
     def show(Badge badgeInstance) {
+        log.info("showing badge:" + badgeInstance.id)
         respond badgeInstance
     }
 
     def create() {
+        log.info("creating a  badge")
         respond new Badge(params)
     }
 
@@ -38,6 +41,7 @@ class BadgeController {
         }
 
         badgeInstance.save flush: true
+        log.info("badge saved: " + badgeInstance.id)
 
         request.withFormat {
             form multipartForm {
@@ -49,6 +53,7 @@ class BadgeController {
     }
 
     def edit(Badge badgeInstance) {
+        log.info("editing badge: " + badgeInstance.id)
         respond badgeInstance
     }
 
@@ -66,6 +71,7 @@ class BadgeController {
         }
 
         badgeInstance.save flush: true
+        log.info("badge updated: " + badgeInstance.id)
 
         request.withFormat {
             form multipartForm {
@@ -85,7 +91,9 @@ class BadgeController {
             return
         }
 
+        log.info("badge deleted: " + badgeInstance.id)
         badgeInstance.delete flush: true
+
 
         request.withFormat {
             form multipartForm {
@@ -97,6 +105,7 @@ class BadgeController {
     }
 
     protected void notFound() {
+        log.info("not found")
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.not.found.message', args: [message(code: 'badge.label', default: 'Badge'), params.id])
